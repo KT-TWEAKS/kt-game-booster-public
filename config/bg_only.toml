@@ -1,0 +1,32 @@
+﻿# Perfil: bg_only (equilibrado - jogo otimizado, background limitado)
+# Ideal para quando voce joga e quer os recursos de background reduzidos
+# sem sacrificar a estabilidade do jogo.
+[config]
+poll_interval_ms = 1000
+
+[features]
+background_limiter = true
+eco_qos_background = true
+io_priority_background = true
+thread_power_background_throttle = true
+thread_power_game_unthrottle = true
+memory_priority_background = true
+
+# Jogo: prioridade alta mas sem realtime (estavel)
+high_performance_plan = true
+turbo_boost = false
+core_parking_disable = false
+disable_c_states = false
+
+# Otimizacoes leves do jogo
+gpu_priority = true
+dwm_thread_priority = true
+page_priority_game = false
+memory_priority_game_high = false
+boost_input_threads = false
+
+background_cpu_pin = false
+
+# Serviços
+game_tree_boost = false
+pause_services_gaming = false

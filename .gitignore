@@ -1,0 +1,25 @@
+# Build and local runtime output
+*.obj
+*.pdb
+*.exp
+*.lib
+*.dll
+*.exe
+release/
+dist/
+exports/
+.kt-state/
+*.log
+
+# .NET / Visual Studio
+**/bin/
+**/obj/
+.vs/
+
+# Local diagnostics and scratch inputs; these are not source.
+analysis/
+local/
+
+# Local updater rollback files
+*.new
+*.previous

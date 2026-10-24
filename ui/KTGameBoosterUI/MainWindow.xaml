@@ -1,0 +1,1619 @@
+<Window x:Class="KTGameBooster.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:KTGameBooster"
+        Title="KT Game Booster v1.0" Height="820" Width="1280" MinHeight="700" MinWidth="1080"
+        Background="Transparent" Foreground="{DynamicResource Fg0Brush}"
+        WindowStyle="None" AllowsTransparency="False" ResizeMode="CanResize"
+        WindowStartupLocation="CenterScreen"
+        Icon="Assets/ktgam.ico"
+        FontFamily="Segoe UI"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        UseLayoutRounding="True"
+        StateChanged="Window_StateChanged">
+    <Window.Resources>
+        <local:LogColorConverter          x:Key="LogColor"/>
+    </Window.Resources>
+
+    <Grid Background="{DynamicResource Bg0Brush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="44"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="224"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid x:Name="bgFx" Grid.RowSpan="2" Grid.ColumnSpan="2" ClipToBounds="True" IsHitTestVisible="False">
+            <Rectangle Fill="#32101014"/>
+        </Grid>
+
+        <Border Grid.Row="0" Grid.ColumnSpan="2" Background="{DynamicResource TitleBarBrush}"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1"
+                MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Grid>
+                <StackPanel Orientation="Horizontal" Margin="16,0" VerticalAlignment="Center">
+                    <Border Width="20" Height="20" CornerRadius="6" Background="{DynamicResource AccentGradBrush}">
+                        <TextBlock Text="KT" FontSize="8" FontWeight="Bold" Foreground="White"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="KT Game Booster" Margin="10,0,0,0" VerticalAlignment="Center"
+                               FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Text="v1.0" Margin="8,0,0,0" VerticalAlignment="Center"
+                               Style="{StaticResource Muted}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="btnThemeToggle" Style="{StaticResource BtnGhost}" Height="43" Width="Auto"
+                            Padding="14,0" BorderThickness="0" Content="Tema: Escuro" FontSize="11"
+                            Click="btnThemeToggle_Click"
+                            ToolTip="Alternar tema (Preto / Escuro / Claro)"/>
+                    <Button Content="—" Style="{StaticResource BtnGhost}" Width="46" Height="43" Padding="0"
+                            BorderThickness="0" Click="TitleMinimize_Click"/>
+                    <Button Content="□" Style="{StaticResource BtnGhost}" Width="46" Height="43" Padding="0"
+                            BorderThickness="0" Click="TitleMaximize_Click"/>
+                    <Button Content="×" Style="{StaticResource BtnWindowClose}" Width="46" Height="43" Padding="0"
+                            BorderThickness="0" Click="btnQuit_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Grid.Column="0" Background="{DynamicResource Bg1Brush}"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
+            <DockPanel>
+
+                <StackPanel DockPanel.Dock="Top" Margin="20,22,20,18">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="38" Height="38" CornerRadius="10" Background="{DynamicResource AccentBrush}">
+                            <TextBlock Text="KT" FontWeight="Bold" FontSize="14" Foreground="White"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="KT GAME" Style="{StaticResource Title}" FontSize="15"/>
+                            <TextBlock Text="BOOSTER · v1.0" Style="{StaticResource Sub}" FontSize="10" Opacity="0.75"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <Border x:Name="adminBadge" DockPanel.Dock="Top" Margin="20,0,20,8"
+                        Background="{DynamicResource SuccessSubtleBrush}" BorderBrush="{DynamicResource SuccessBorderBrush}" BorderThickness="1"
+                        CornerRadius="8" Padding="10,6" Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Width="12" Height="12" Stretch="Uniform" Fill="{DynamicResource SuccessBrush}" Margin="0,0,6,0"
+                              Data="M 6 1 L 11 4 L 11 9 L 6 12 L 1 9 L 1 4 Z M 6 4 L 4 6 L 5.5 7.5 L 4 9 L 6 9 L 8 7 L 6.5 5.5 Z"/>
+                        <TextBlock Text="elevado (admin)" FontSize="11" Foreground="{DynamicResource SuccessBrush}" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel DockPanel.Dock="Top" Margin="6,8">
+                    <RadioButton x:Name="navDashboard" GroupName="nav" IsChecked="True" Tag="Dashboard"
+                                 Checked="Nav_Changed" Style="{StaticResource NavItem}" ToolTip="Dashboard">
+                        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="16" Width="22"/><TextBlock Text="Dashboard" VerticalAlignment="Center"/></StackPanel>
+                    </RadioButton>
+                    <RadioButton x:Name="navTweaks" GroupName="nav"
+                                 Tag="Tweaks" Checked="Nav_Changed" Style="{StaticResource NavItem}" ToolTip="Tweaks">
+                        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="16" Width="22"/><TextBlock Text="Tweaks" VerticalAlignment="Center"/></StackPanel>
+                    </RadioButton>
+                    <RadioButton x:Name="navProcesses" GroupName="nav"
+                                 Tag="Processos" Checked="Nav_Changed" Style="{StaticResource NavItem}" ToolTip="Processos">
+                        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE7F4;" FontFamily="Segoe MDL2 Assets" FontSize="16" Width="22"/><TextBlock Text="Processos" VerticalAlignment="Center"/></StackPanel>
+                    </RadioButton>
+                    <RadioButton x:Name="navGovernor" GroupName="nav"
+                                 Tag="Governor" Checked="Nav_Changed" Style="{StaticResource NavItem}" ToolTip="Governor">
+                        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE950;" FontFamily="Segoe MDL2 Assets" FontSize="16" Width="22"/><TextBlock Text="Governor" VerticalAlignment="Center"/></StackPanel>
+                    </RadioButton>
+                    <RadioButton x:Name="navServices" GroupName="nav"
+                                 Tag="Servicos" Checked="Nav_Changed" Style="{StaticResource NavItem}" ToolTip="Serviços">
+                        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE90F;" FontFamily="Segoe MDL2 Assets" FontSize="16" Width="22"/><TextBlock Text="Serviços" VerticalAlignment="Center"/></StackPanel>
+                    </RadioButton>
+                    <RadioButton x:Name="navBench" GroupName="nav"
+                                 Tag="Bench" Checked="Nav_Changed" Style="{StaticResource NavItem}" ToolTip="Bench">
+                        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" FontSize="16" Width="22"/><TextBlock Text="Bench" VerticalAlignment="Center"/></StackPanel>
+                    </RadioButton>
+                    <RadioButton x:Name="navGames" GroupName="nav"
+                                 Tag="Jogos" Checked="Nav_Changed" Style="{StaticResource NavItem}" ToolTip="Jogos">
+                        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE7FC;" FontFamily="Segoe MDL2 Assets" FontSize="16" Width="22"/><TextBlock Text="Jogos" VerticalAlignment="Center"/></StackPanel>
+                    </RadioButton>
+                    <RadioButton x:Name="navAbout" GroupName="nav"
+                                 Tag="Sobre" Checked="Nav_Changed" Style="{StaticResource NavItem}" ToolTip="Sobre">
+                        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" FontSize="16" Width="22"/><TextBlock Text="Sobre" VerticalAlignment="Center"/></StackPanel>
+                    </RadioButton>
+                </StackPanel>
+
+                <Border x:Name="extremeBanner" DockPanel.Dock="Bottom" Margin="12,0,12,12"
+                        Background="{DynamicResource DangerSubtleBrush}" BorderBrush="{DynamicResource DangerStrongBrush}" BorderThickness="1"
+                        CornerRadius="10" Padding="12,10" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="RECUPERAÇÃO DE SHELL PENDENTE" FontWeight="Bold" FontSize="11" Foreground="White"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="Uma sessão anterior pode ter deixado processos do shell suspensos." FontSize="10" Foreground="White"
+                                   Opacity="0.85" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        <Button x:Name="btnPanic" Content="RESTAURAR SHELL (pânico)" Style="{StaticResource BtnPanic}"
+                                Margin="0,8,0,0" Click="btnPanic_Click"
+                                ToolTip="Reverte o modo extremo a qualquer momento"/>
+                    </StackPanel>
+                </Border>
+
+                <Border DockPanel.Dock="Bottom" Background="{DynamicResource Bg2Brush}" Margin="12,0,12,12" Padding="12,10"
+                        CornerRadius="12" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,7">
+                            <Ellipse x:Name="backdropDot" Width="7" Height="7" Fill="{DynamicResource Fg2Brush}"
+                                     Margin="0,0,7,0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtBackdropStatus" Text="material: verificando" Style="{StaticResource Muted}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse x:Name="connDot" Width="8" Height="8" Fill="{DynamicResource AccentBrush}"
+                                     Margin="0,0,7,0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtConnLabel" Text="motor" Style="{StaticResource Sub}" FontSize="12"/>
+                            <Border x:Name="adminMiniDot" Width="6" Height="6" CornerRadius="3" Margin="8,0,0,0"
+                                    Background="{DynamicResource SuccessBrush}"
+                                    ToolTip="Host em modo elevado (admin)"
+                                    Visibility="Collapsed"/>
+                        </StackPanel>
+                        <TextBlock x:Name="txtStatus" Text="conectando..." Style="{StaticResource Sub}" FontSize="11"
+                                   Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock x:Name="txtExtremeStatus" Text="" Style="{StaticResource Muted}" FontSize="10"
+                                   Margin="0,3,0,0" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="txtEngineHint" Text="" Style="{StaticResource Muted}" FontSize="10"
+                                   Margin="0,5,0,0" TextWrapping="Wrap" Visibility="Collapsed"/>
+                        <Button x:Name="btnRecoverEngine" Content="Tentar recuperação" Style="{StaticResource BtnGhost}"
+                                Margin="0,8,0,0" Padding="8,6" Visibility="Collapsed"
+                                Click="btnRecoverEngine_Click" ToolTip="Tenta restaurar a sessão pendente sem aplicar novos ajustes"/>
+                    </StackPanel>
+                </Border>
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="{DynamicResource TopBarBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1"
+                    CornerRadius="0,0,14,14" Padding="22,12">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock x:Name="txtPageTitle" Text="Dashboard" Style="{StaticResource Title}" FontSize="18"/>
+                        <TextBlock x:Name="txtPageSub" Text="visão geral do motor e do jogo ativo" Style="{StaticResource Sub}" FontSize="11" Margin="0,2,0,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Style="{StaticResource GlassChip}" Margin="0,0,10,0">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="7" Height="7" Fill="{DynamicResource Accent3Brush}" Margin="0,0,7,0"/>
+                                <TextBlock x:Name="txtMaterialChip" Text="MICA" Style="{StaticResource Sub}" FontSize="10" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border x:Name="profileChip" Background="{DynamicResource Bg3Brush}"
+                                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                                CornerRadius="14" Padding="12,5" Margin="0,0,10,0">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="7" Height="7" Fill="{DynamicResource AccentBrush}" Margin="0,0,7,0" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtActiveProfile" Text="perfil: normal" Style="{StaticResource Sub}" FontSize="11" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Border>
+                        <Button x:Name="btnTopPause" Content="Pausar" Style="{StaticResource BtnGhost}" Margin="0,0,6,0"
+                                Click="btnPause_Click" ToolTip="Pausar/retomar motor (Ctrl+Shift+P)"/>
+                        <Button x:Name="btnTopStart" Content="Iniciar" Style="{StaticResource BtnPrimary}" Margin="0,0,6,0"
+                                Click="btnStart_Click" ToolTip="Liga/desliga o motor (Ctrl+Shift+O)"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <ScrollViewer x:Name="pageDashboard" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <Grid Margin="22,18,22,22">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Border x:Name="infoBarDashboard" Grid.Row="0" Style="{StaticResource InfoBarWarning}"
+                            Visibility="Collapsed" Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE7BA;" Style="{StaticResource InfoBarIcon}" Foreground="{DynamicResource WarnBrush}"/>
+                            <TextBlock x:Name="infoBarDashboardMsg" Grid.Column="1" Style="{StaticResource InfoBarMessage}"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Row="1" Style="{StaticResource PanelHero}" Padding="22,18" Margin="0,0,0,14">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="JOGO ATIVO" Style="{StaticResource SectionHeader}"/>
+                                    <Border x:Name="confBadge" Margin="10,0,0,0" CornerRadius="9" Padding="8,3" Background="{DynamicResource Bg3Brush}" Visibility="Collapsed">
+                                        <TextBlock x:Name="txtConfidence" Text="" Style="{StaticResource Sub}" FontSize="10"/>
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock x:Name="txtGame" Style="{StaticResource MetricBig}" FontSize="30" Text="aguardando..." Margin="0,6,0,0"/>
+                                <TextBlock x:Name="txtGameDetail" Style="{StaticResource Sub}" Text="motor " Margin="0,8,0,0" TextWrapping="Wrap"/>
+                                <TextBlock x:Name="txtFps" Style="{StaticResource Sub}" Text="" Margin="0,4,0,0"
+                                           ToolTip="FPS medido via Present/ETW. P95 é o percentil 95 do tempo de frame; 1% low é derivado do P99."/>
+                                <TextBlock x:Name="txtGpu" Style="{StaticResource Muted}" FontSize="10" Margin="0,3,0,0"
+                                           Text="GPU: aguardando telemetria" TextTrimming="CharacterEllipsis"
+                                           ToolTip="Utilização agregada dos motores de GPU detectados pelo Windows."/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                <Border x:Name="engineStateChip" Style="{StaticResource StatusChip}" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse x:Name="engineStateDot" Width="7" Height="7" Fill="{DynamicResource WarnBrush}"
+                                                 Margin="0,0,7,0" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="txtEngineState" Text="MOTOR PARADO" Style="{StaticResource Sub}"
+                                                   FontSize="10" FontWeight="Bold"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border x:Name="acChip" Style="{StaticResource StatusChip}" HorizontalAlignment="Right" Margin="0,10,0,0"
+                                        Background="{DynamicResource WarnSubtleBrush}" BorderBrush="{DynamicResource WarnBorderBrush}"
+                                        Visibility="Collapsed"
+                                        ToolTip="Anti-cheat detectado: a sessão roda sem suspensão de processos/threads, sem pausa de serviços e sem limitador de fundo — só levers user-mode que não acionam o anticheat.">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE72E;" FontFamily="Segoe MDL2 Assets" FontSize="11"
+                                                   Foreground="{DynamicResource WarnBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBlock x:Name="txtAcChip" Text="ANTICHEAT · MODO SEGURO" Style="{StaticResource Sub}"
+                                                   FontSize="10" FontWeight="Bold" Foreground="{DynamicResource WarnBrush}"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border x:Name="presetChip" Style="{StaticResource StatusChip}" HorizontalAlignment="Right" Margin="0,10,0,0"
+                                        Background="{DynamicResource Bg3Brush}"
+                                        Visibility="Collapsed"
+                                        ToolTip="Preset automático aplicado ao título desta sessão (bloco [[process]] do gamemode.toml, auto-perfil ou perfil streaming com app de captura ativo). Vazio = perfil global escolhido por você.">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE7EE;" FontFamily="Segoe MDL2 Assets" FontSize="11"
+                                                   Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBlock x:Name="txtPresetChip" Text="PRESET AUTOMÁTICO" Style="{StaticResource Sub}"
+                                                   FontSize="10" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                    </StackPanel>
+                                </Border>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+                                    <Button x:Name="btnTournament" Content="FPS Máximo" Margin="0,0,6,0"
+                                            Click="btnTournament_Click"
+                                            ToolTip="FPS Máximo: prioridade Alta, MMCSS, memória e I/O do jogo; sem Realtime"/>
+                                    <Button x:Name="btnCleanRam" Content="Limpar RAM" Style="{StaticResource BtnPrimary}" Click="btnCleanRam_Click"
+                                            ToolTip="Trim do working set (Ctrl+Shift+M)"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Grid Grid.Row="2" Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource PanelHoverable}" Margin="0,0,10,0" Padding="18,16">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="CPU" Style="{StaticResource SectionHeader}"/>
+                                    <TextBlock Text="  ·  pico" Style="{StaticResource Muted}" FontSize="10" Margin="6,0,0,0"/>
+                                    <TextBlock x:Name="txtPeakCpu" Text="·" Style="{StaticResource Muted}" FontSize="10" FontWeight="SemiBold" Margin="3,0,0,0"/>
+                                </StackPanel>
+                                <TextBlock x:Name="txtCpu" Style="{StaticResource MetricBig}" FontSize="30" Text="0%"/>
+                                <ProgressBar x:Name="cpuBar" Value="0" Maximum="100" Margin="0,10,0,0" Style="{StaticResource CpuBarStyle}"
+                                             AutomationProperties.Name="Uso de CPU atual"/>
+                                <local:Sparkline x:Name="sparkCpu" Height="32" Margin="0,8,0,0"
+                                                 AutomationProperties.Name="Histórico de CPU nas últimas amostras"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Style="{StaticResource PanelHoverable}" Margin="0,0,10,0" Padding="18,16">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="RAM" Style="{StaticResource SectionHeader}"/>
+                                    <TextBlock Text="  ·  pico" Style="{StaticResource Muted}" FontSize="10" Margin="6,0,0,0"/>
+                                    <TextBlock x:Name="txtPeakRam" Text="·" Style="{StaticResource Muted}" FontSize="10" FontWeight="SemiBold" Margin="3,0,0,0"/>
+                                </StackPanel>
+                                <TextBlock x:Name="txtRam" Style="{StaticResource MetricBig}" FontSize="30" Text="0 GB"/>
+                                <ProgressBar x:Name="ramBar" Value="0" Maximum="100" Margin="0,10,0,0" Style="{StaticResource RamBarStyle}"
+                                             AutomationProperties.Name="Uso de memória atual"/>
+                                <local:Sparkline x:Name="sparkRam" Height="32" Margin="0,8,0,0"
+                                                 AutomationProperties.Name="Histórico de memória nas últimas amostras"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="2" Style="{StaticResource PanelHoverable}" Margin="0,0,10,0" Padding="18,16">
+                            <StackPanel>
+                                <TextBlock Text="LIMITADOS" Style="{StaticResource SectionHeader}"/>
+                                <TextBlock x:Name="txtBg" Style="{StaticResource MetricBig}" FontSize="30" Text="0" Foreground="{DynamicResource WarnBrush}"/>
+                                <TextBlock Text="processos de fundo em EcoQoS" Style="{StaticResource Muted}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="3" Style="{StaticResource PanelHoverable}" Padding="18,16">
+                            <StackPanel>
+                                <TextBlock Text="BOOSTS / LIMPEZAS" Style="{StaticResource SectionHeader}"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                    <TextBlock Text="helpers:" Style="{StaticResource Muted}"/>
+                                    <TextBlock x:Name="txtHelpers" Text="0" Style="{StaticResource MetricMid}" Margin="6,0,0,0" Foreground="{DynamicResource Accent3Brush}"/>
+                                </StackPanel>
+                                <TextBlock x:Name="txtSvcPause" Text="" Style="{StaticResource Muted}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Grid Grid.Row="3" Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="360"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource Panel}" Margin="0,0,12,0">
+                            <StackPanel>
+                                <TextBlock Text="AÇÃO RÁPIDA" Style="{StaticResource SectionHeader}"/>
+                                <TextBlock Text="perfil" Style="{StaticResource Sub}" Margin="0,10,0,4"/>
+                                <ComboBox x:Name="cmbProfile" SelectedIndex="0" SelectionChanged="cmbProfile_Changed" Style="{StaticResource DarkCombo}"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                    <CheckBox x:Name="chkAutoProfile" Content="Auto-perfil" Tag="auto_profile_switching" Style="{StaticResource TweakToggle}"
+                                              Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                </StackPanel>
+                                <CheckBox x:Name="chkAcSafe" Content="Sequência segura p/ anticheat" Tag="anticheat_safe_mode" Style="{StaticResource TweakToggle}"
+                                          Margin="0,6,0,0" Checked="Toggle_Changed" Unchecked="Toggle_Changed"
+                                          ToolTip="Quando um jogo com anti-cheat (Valorant, Fortnite, CoD, PUBG, Apex, cs2...) for detectado, a sessão desliga automaticamente suspensão de threads/processos, pausa de serviços e limitador de fundo — nada que o anticheat possa sinalizar. Prioridade/afinidade/MMCSS continuam."/>
+                                <CheckBox x:Name="chkSafeMode" Content="Modo seguro (somente diagnóstico)" Style="{StaticResource TweakToggle}"
+                                          Margin="0,6,0,0" Checked="SafeMode_Changed" Unchecked="SafeMode_Changed"
+                                          ToolTip="Restaura uma sessão pendente e bloqueia todos os tweaks até você desmarcar esta opção."/>
+
+                                <CheckBox x:Name="chkAutoRun" Content="Iniciar com o Windows (bandeja)" Style="{StaticResource TweakToggle}"
+                                          Margin="0,2,0,0" Checked="AutoRun_Changed" Unchecked="AutoRun_Changed"
+                                          ToolTip="Registra o app no HKCU Run para abrir junto com o Windows, já minimizado na bandeja. Reversível aqui ou pelo Gerenciador de Tarefas."/>
+
+                                <CheckBox x:Name="chkHideOnGame" Content="Modo jogo: painel leve na bandeja" Style="{StaticResource TweakToggle}"
+                                          Margin="0,6,9,0" Checked="HideOnGame_Changed" Unchecked="HideOnGame_Changed"
+                                          ToolTip="Quando um jogo é detectado, o painel entra em modo econômico (animações e sombras desligadas) e some para a bandeja — a otimização continua. A janela volta quando você clica no ícone da bandeja."/>
+
+                                <TextBlock Text="otimizar um .exe agora" Style="{StaticResource Sub}" Margin="0,14,0,4"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                        <TextBox x:Name="txtTestTarget" Text=""
+                                             ToolTip="Nome do .exe para testar como jogo; ou selecione um processo na página Processos."/>
+                                    <Button x:Name="btnTestTarget" Grid.Column="1" Content="Testar" Margin="8,0,0,0" Click="btnTestTarget_Click"
+                                            ToolTip="Força o motor a otimizar este processo como se fosse um jogo"/>
+                                </Grid>
+
+                                <Separator Margin="0,14,0,10"/>
+                                <TextBlock Text="HOTKEYS GLOBAIS" Style="{StaticResource SectionHeader}"/>
+                                <Grid Margin="0,4,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="Ctrl+Shift+O" Style="{StaticResource Muted}" FontFamily="Consolas"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="liga/desliga motor" Style="{StaticResource Muted}" Margin="10,0,0,0"/>
+                                    <TextBlock Grid.Row="1" Text="Ctrl+Shift+P" Style="{StaticResource Muted}" FontFamily="Consolas" Margin="0,4,0,0"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="pausa/retoma" Style="{StaticResource Muted}" Margin="10,4,0,0"/>
+                                    <TextBlock Grid.Row="2" Text="Ctrl+Shift+M" Style="{StaticResource Muted}" FontFamily="Consolas" Margin="0,4,0,0"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="limpa RAM" Style="{StaticResource Muted}" Margin="10,4,0,0"/>
+                                    <TextBlock Grid.Row="3" Text="Ctrl+Shift+B" Style="{StaticResource Muted}" FontFamily="Consolas" Margin="0,4,0,0"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="roda bench" Style="{StaticResource Muted}" Margin="10,4,0,0"/>
+                                </Grid>
+                                <TextBlock x:Name="txtHotkeyStatus" Text="registradas nesta sessão" Style="{StaticResource Muted}"
+                                           FontSize="10" Margin="0,6,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Style="{StaticResource Muted}" FontSize="10" Opacity="0.7" TextWrapping="Wrap"
+                                           Text="Atalhos globais: continuam funcionando fora do aplicativo."/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Style="{StaticResource Panel}">
+                            <DockPanel>
+                                <Grid DockPanel.Dock="Top" Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="LOG DO MOTOR" Style="{StaticResource SectionHeader}" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="txtLogCount" Text="" Style="{StaticResource Muted}" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                    <ComboBox x:Name="cmbLogLevel" Grid.Column="2" SelectedIndex="0" SelectionChanged="cmbLogLevel_Changed"
+                                              Style="{StaticResource DarkCombo}" MinWidth="110" ToolTip="Filtrar por severidade">
+                                        <ComboBoxItem Content="tudo"/>
+                                        <ComboBoxItem Content="+ avisos"/>
+                                        <ComboBoxItem Content="só erros"/>
+                                    </ComboBox>
+                                    <CheckBox x:Name="chkLogAuto" Grid.Column="3" Content="auto-scroll"
+                                              Style="{StaticResource MiniToggle}" IsChecked="True" Margin="10,0,0,0"
+                                              Checked="chkLogAuto_Changed" Unchecked="chkLogAuto_Changed"/>
+                                </Grid>
+                                <Grid DockPanel.Dock="Top" Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="txtLogFilter" TextChanged="txtLogFilter_TextChanged"
+                                             ToolTip="Filtrar por texto (case-insensitive)"/>
+                                    <Button Grid.Column="1" Content="Copiar" Margin="8,0,0,0" Click="btnCopyLog_Click"
+                                            ToolTip="Copia as linhas visíveis"/>
+                                    <Button Grid.Column="2" Content="Exportar" Margin="6,0,0,0" Click="btnExportLog_Click"
+                                            ToolTip="Salva as linhas visíveis em um .txt"/>
+                                </Grid>
+                                    <ListBox x:Name="lstLog" Height="220" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                         FontFamily="Consolas" FontSize="11.5"
+                                         VirtualizingPanel.IsVirtualizing="True"
+                                         VirtualizingPanel.VirtualizationMode="Recycling">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" TextWrapping="NoWrap"
+                                                       Foreground="{Binding Converter={StaticResource LogColor}}"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </DockPanel>
+                        </Border>
+                    </Grid>
+
+                    <Border Grid.Row="4" Style="{StaticResource Panel}" Padding="18,14" Margin="0,0,0,14">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="UPTIME" Style="{StaticResource SectionHeader}"/>
+                                <TextBlock x:Name="txtUptime" Style="{StaticResource MetricMid}" FontSize="22" Text="0m 0s" Margin="0,4,0,0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="SESSÕES DE JOGO" Style="{StaticResource SectionHeader}"/>
+                                <TextBlock x:Name="txtSessions" Style="{StaticResource MetricMid}" FontSize="22" Text="0" Margin="0,4,0,0"/>
+                                <TextBlock x:Name="txtTotalGameTime" Style="{StaticResource Muted}" Text="0h 0m totais" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="RAM LIBERADA" Style="{StaticResource SectionHeader}"/>
+                                <TextBlock x:Name="txtMemFreed" Style="{StaticResource MetricMid}" FontSize="22" Text="0 MB" Margin="0,4,0,0"/>
+                                <TextBlock x:Name="txtMemThisClean" Style="{StaticResource Muted}" Text="última: 0 MB" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="3">
+                                <TextBlock Text="ETW" Style="{StaticResource SectionHeader}"/>
+                                <TextBlock x:Name="txtEtw" Style="{StaticResource MetricMid}" FontSize="22" Text="0" Margin="0,4,0,0"/>
+                                <TextBlock x:Name="txtEtwMode" Text="verificando telemetria" Style="{StaticResource Muted}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4">
+                                <TextBlock Text="THREADS SUSPENSAS" Style="{StaticResource SectionHeader}"/>
+                                <TextBlock x:Name="txtSuspended" Style="{StaticResource MetricMid}" FontSize="22" Text="0" Margin="0,4,0,0"/>
+                                <TextBlock Text="threads de GameInput suspensas pelo conjunto ativo" Style="{StaticResource Muted}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Row="5" Style="{StaticResource Panel}" Padding="18,14">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="PRESETS" Style="{StaticResource SectionHeader}"/>
+                                <TextBlock Text="preparam mudanças · revise e aplique em Tweaks" Style="{StaticResource Muted}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button x:Name="btnPresetBalanced" Content="Equilibrado" Margin="0,0,6,0" Click="btnPresetBalanced_Click"
+                                        ToolTip="Liga tweaks comuns e zera extremos"/>
+                                <Button x:Name="btnPresetCompetitive" Content="FPS Máximo" Margin="0,0,6,0" Click="btnPresetCompetitive_Click"
+                                        ToolTip="Prioriza FPS e frame pacing sem usar prioridade Realtime"/>
+                                <Button x:Name="btnPresetStreaming" Content="Streaming" Margin="0,0,6,0" Click="btnPresetStreaming_Click"
+                                        ToolTip="Perfis para captura: OBS/Discord/Spotify ficam fora do limitador e o jogo continua priorizado"/>
+                                <Button x:Name="btnPresetDefaults" Content="Restaurar padrão" Margin="0,0,6,0" Click="btnPresetDefaults_Click"
+                                        ToolTip="Volta aos defaults do gamemode.toml"/>
+                                <Button x:Name="btnReviewStaged" Content="Revisar pendências" Margin="0,0,6,0"
+                                        Visibility="Collapsed" Click="btnReviewStaged_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </ScrollViewer>
+
+            <Grid x:Name="pageTweaks" Grid.Row="1" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="22,18,22,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="txtTweakFilter" TextChanged="txtTweakFilter_TextChanged"
+                                 Margin="0,0,12,0" ToolTip="Buscar tweak por nome ou descrição"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="Selecionar não extremos" Margin="0,0,6,0" Click="btnTweakAll_Click"
+                                    ToolTip="Seleciona todos os ajustes não rotulados como extremos; revise o escopo e reinícios antes de aplicar."/>
+                            <Button Content="Desmarcar tudo" Margin="0,0,6,0" Click="btnTweakNone_Click"/>
+                            <Button Content="Restaurar padrão" Click="btnPresetDefaults_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    <Border x:Name="infoBarTweaks" Style="{StaticResource InfoBarInfo}"
+                            Visibility="Collapsed" Margin="0,12,0,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE946;" Style="{StaticResource InfoBarIcon}" Foreground="{DynamicResource InfoBrush}"/>
+                            <TextBlock x:Name="infoBarTweaksMsg" Grid.Column="1" Style="{StaticResource InfoBarMessage}"/>
+                        </Grid>
+                    </Border>
+                    <Border x:Name="stagedBar" Style="{StaticResource StagedBar}" Visibility="Collapsed" Margin="0,10,0,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="txtStagedCount" Text="0 alterações pendentes"
+                                       Style="{StaticResource SettingCardTitle}" VerticalAlignment="Center"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Button x:Name="btnApplyStaged" Content="Aplicar alterações" Style="{StaticResource BtnPrimary}"
+                                        Click="btnApplyStaged_Click" Margin="0,0,8,0"/>
+                                <Button x:Name="btnUndoStaged" Content="Descartar" Style="{StaticResource BtnGhost}"
+                                        Click="btnUndoStaged_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="22,14,22,22">
+                        <UniformGrid Columns="1" Rows="0">
+                            <Border Style="{StaticResource TweakCard}">
+                                <StackPanel>
+                                    <TextBlock Text="AGENDAMENTO &amp; CPU" Style="{StaticResource SectionHeader}"/>
+                                    <TextBlock Text="Onde o jogo roda: núcleos, afinidade e wake-ups da CPU."
+                                               Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,2,0,8"/>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Core Parking off" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Impede o Windows de desligar núcleos ociosos." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkPark" Grid.Column="1" Tag="core_parking_disable"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Impede o Windows de desligar (fazer parking) núcleos ociosos durante a sessão."
+                                                      AutomationProperties.Name="Core Parking off"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="C-States off (manual)" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Mantém os núcleos fora do modo de economia." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkCstate" Grid.Column="1" Tag="disable_c_states"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Mantém os núcleos fora dos estados de economia (C-States) para latência menor."
+                                                      AutomationProperties.Name="C-States off"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Unthrottle jogo" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Remove o limitador de potência das threads do jogo." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkUnthr" Grid.Column="1" Tag="thread_power_game_unthrottle"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Remove o power throttling das threads do processo do jogo."
+                                                      AutomationProperties.Name="Unthrottle jogo"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Boost input threads" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Eleva a prioridade das threads de entrada." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkBoostInput" Grid.Column="1" Tag="boost_input_threads"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Eleva a prioridade das threads de entrada (teclado/mouse) para reduzir input lag."
+                                                      AutomationProperties.Name="Boost input threads"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Suspender GameInput (manual)" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Suspende o serviço GameInput durante a sessão." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkGameInput" Grid.Column="1" Tag="suspend_gameinput_threads"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Suspende as threads do serviço GameInput para liberar tempo de CPU (manual; restaurado ao fim da sessão)."
+                                                      AutomationProperties.Name="Suspender GameInput"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource TweakCard}">
+                                <StackPanel>
+                                    <TextBlock Text="ENERGIA" Style="{StaticResource SectionHeader}"/>
+                                    <TextBlock Text="Plano de energia e turbo durante a sessão."
+                                               Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,2,0,8"/>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Plano Alta Performance" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Ativa o plano de energia de alto desempenho." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkPowerPlan" Grid.Column="1" Tag="high_performance_plan"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Ativa o plano de energia de alto desempenho enquanto o jogo roda."
+                                                      AutomationProperties.Name="Plano Alta Performance"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Turbo Boost agressivo" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Mantém o turbo boost ativo sob carga pesada." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkTurbo" Grid.Column="1" Tag="turbo_boost"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Mantém o Turbo Boost ativo sob carga pesada, evitando quedas agressivas de clock."
+                                                      AutomationProperties.Name="Turbo Boost agressivo"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Planos gaming on/off" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Liga e desliga os planos de energia gaming do Windows." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkGamingPlans" Grid.Column="1" Tag="gaming_power_plans"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Liga/desliga os planos de energia Gaming do Windows disponíveis no sistema."
+                                                      AutomationProperties.Name="Planos gaming"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="GPU HW Scheduling" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Ativa o agendamento de hardware da GPU." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkGpuHw" Grid.Column="1" Tag="gpu_hardware_scheduling"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Requer reinício do Windows"
+                                                      AutomationProperties.Name="GPU HW Scheduling"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource TweakCard}">
+                                <StackPanel>
+                                    <TextBlock Text="GPU &amp; MEMÓRIA" Style="{StaticResource SectionHeader}"/>
+                                    <TextBlock Text="Prioridade de gráfico, memória, rede e captura de fundo."
+                                               Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,2,0,8"/>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="GPU Priority" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Eleva a prioridade do processo de gráfico." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkGpu" Grid.Column="1" Tag="gpu_priority"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Eleva a prioridade do contexto de gráfico do jogo."
+                                                      AutomationProperties.Name="GPU Priority"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="MMCSS / DWM" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Ajusta o MMCSS para o caminho crítico de renderização." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkMmcss" Grid.Column="1" Tag="dwm_mmcss"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Ajusta o registro MMCSS usado pelo DWM para o caminho crítico de renderização."
+                                                      AutomationProperties.Name="MMCSS / DWM"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Memória compactada off (manual)" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Desliga o compactador de memória da sessão." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkMemCompress" Grid.Column="1" Tag="memory_compression_disable"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Para o serviço de compactação de memória durante a sessão (restaurado ao sair)."
+                                                      AutomationProperties.Name="Memória compactada off"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Game DVR off (sessão)" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Desliga a captura de fundo do Game Bar." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkGameDvr" Grid.Column="1" Tag="game_dvr_disable"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Desliga a captura de fundo do Game Bar enquanto joga (reversível; aplica na próxima sessão de jogo)"
+                                                      AutomationProperties.Name="Game DVR off"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource TweakCard}">
+                                <StackPanel>
+                                    <TextBlock Text="LIMITADOR &amp; FOCO" Style="{StaticResource SectionHeader}"/>
+                                    <TextBlock Text="Segundo plano contido e serviços sem atrapalhar o jogo."
+                                               Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,2,0,8"/>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Limitador de fundo" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Limita CPU e I/O dos processos em segundo plano." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkBg" Grid.Column="1" Tag="background_limiter"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Limita CPU e I/O dos processos em segundo plano durante a sessão de jogo."
+                                                      AutomationProperties.Name="Limitador de fundo"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="EcoQoS (fundo)" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Aplica qualidade de eficiência nos processos de fundo." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkEco" Grid.Column="1" Tag="eco_qos_background"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Aplica EcoQoS (eficiência) nos processos em segundo plano."
+                                                      AutomationProperties.Name="EcoQoS fundo"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="I/O baixa (fundo)" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Reduz a prioridade de disco dos processos de fundo." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkIo" Grid.Column="1" Tag="io_priority_background"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Reduz a prioridade de disco (I/O) dos processos em segundo plano."
+                                                      AutomationProperties.Name="I/O baixa fundo"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Liberar RAM do fundo" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Faz trim da memória dos processos em segundo plano." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkTrimWs" Grid.Column="1" Tag="trim_background_ws"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Faz trim do working set dos processos em segundo plano para liberar RAM."
+                                                      AutomationProperties.Name="Liberar RAM do fundo"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Boost nos helpers do jogo" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Eleva a prioridade dos helpers do processo do jogo." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkTreeBoost" Grid.Column="1" Tag="game_tree_boost"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Eleva a prioridade dos processos filhos/helpers do jogo."
+                                                      AutomationProperties.Name="Boost nos helpers do jogo"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Otimizar serviços opcionais" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Pausa serviços não críticos durante o jogo." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkSvcGaming" Grid.Column="1" Tag="pause_services_gaming"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Pausa quando possível; caso contrário para. Restaura automaticamente ao fim do jogo."
+                                                      AutomationProperties.Name="Otimizar serviços opcionais"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource TweakCard}">
+                                <StackPanel>
+                                    <TextBlock Text="LATÊNCIA AVANÇADA" Style="{StaticResource SectionHeader}" Foreground="{DynamicResource Accent3Brush}"/>
+                                    <TextBlock Text="Ajustes extras da engine para reduzir filas e priorizar o caminho crítico do jogo."
+                                               Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Prioridade das threads do DWM" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Ajusta a prioridade das threads do compositor." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkDwmThread" Grid.Column="1" Tag="dwm_thread_priority"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Ajusta a prioridade das threads do Desktop Window Manager para o caminho de composição."
+                                                      AutomationProperties.Name="Prioridade das threads do DWM"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Power throttling em segundo plano" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Força power throttling no que estiver em segundo plano." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkBgPowerThrottle" Grid.Column="1" Tag="thread_power_background_throttle"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Força power throttling nas threads dos processos em segundo plano."
+                                                      AutomationProperties.Name="Power throttling em segundo plano"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="I/O alta para o jogo" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Sobe a prioridade de disco do processo do jogo." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkIoGameHigh" Grid.Column="1" Tag="io_priority_game_high"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Sobe a prioridade de disco (I/O) do processo do jogo para Alta."
+                                                      AutomationProperties.Name="I/O alta para o jogo"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="MMCSS nas threads do jogo" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Registra as threads do jogo no MMCSS." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkMmcssGame" Grid.Column="1" Tag="mmcss_game"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Registra as threads do processo do jogo no esquema MMCSS."
+                                                      AutomationProperties.Name="MMCSS nas threads do jogo"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border Style="{StaticResource SettingCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Prioridade de páginas do jogo" Style="{StaticResource SettingCardTitle}"/>
+                                                <TextBlock Text="Prioriza a memória de página do processo do jogo." Style="{StaticResource SettingCardDesc}"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="chkPageGame" Grid.Column="1" Tag="page_priority_game"
+                                                      Style="{StaticResource SettingToggle}"
+                                                      ToolTip="Define a prioridade de memória de página do processo do jogo como Alta."
+                                                      AutomationProperties.Name="Prioridade de páginas do jogo"
+                                                      Checked="Toggle_Changed" Unchecked="Toggle_Changed"/>
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
+            <Grid x:Name="pageProcesses" Grid.Row="1" Visibility="Collapsed" Margin="22,18,22,22">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="PROCESSOS DO SISTEMA" Style="{StaticResource Title}" FontSize="18"/>
+                        <TextBlock x:Name="txtProcCount" Text="" Style="{StaticResource Muted}" Margin="10,4,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBox x:Name="txtProcFilter" Width="220" TextChanged="txtProcFilter_TextChanged"
+                             ToolTip="Filtrar por nome (ex.: chrome, spotify, cs2)"/>
+                    <Button x:Name="btnBoostTarget" Content="Otimizar como jogo" Style="{StaticResource BtnPrimary}" Margin="8,0,0,0"
+                            Click="btnBoostTarget_Click"
+                            ToolTip="Força o motor a tratar o processo selecionado como jogo (boost completo)"/>
+                    <Button x:Name="btnExcludeProc" Content="Excluir do limitador" Margin="8,0,0,0"
+                            Click="btnExcludeProc_Click"
+                            ToolTip="Nunca limitar este processo (ex.: Spotify/Discord)"/>
+                </StackPanel>
+                <Border Grid.Row="2" Style="{StaticResource Panel}" Padding="6">
+                    <ListView x:Name="lstProcs">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="70" DisplayMemberBinding="{Binding cpuStr}">
+                                    <GridViewColumnHeader Content="CPU" Tag="cpuPct" Click="ProcCol_Click"/>
+                                </GridViewColumn>
+                                <GridViewColumn Width="70" DisplayMemberBinding="{Binding ramStr}">
+                                    <GridViewColumnHeader Content="RAM" Tag="ramMB" Click="ProcCol_Click"/>
+                                </GridViewColumn>
+                                <GridViewColumn Width="70" DisplayMemberBinding="{Binding pid}">
+                                    <GridViewColumnHeader Content="PID" Tag="pidNum" Click="ProcCol_Click"/>
+                                </GridViewColumn>
+                                <GridViewColumn Width="280">
+                                    <GridViewColumnHeader Content="Nome" Tag="name" Click="ProcCol_Click"/>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Grid Width="22" Height="22" Margin="0,0,8,0">
+                                                    <TextBlock Text="&#xE8D4;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                                               Foreground="{DynamicResource Fg2Brush}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                    <Image Source="{Binding icon}" Width="20" Height="20" Stretch="Uniform">
+                                                        <Image.Style>
+                                                            <Style TargetType="Image">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding icon}" Value="{x:Null}">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Image.Style>
+                                                    </Image>
+                                                </Grid>
+                                                <TextBlock Text="{Binding name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding klass}">
+                                    <GridViewColumnHeader Content="Classe" Tag="klass" Click="ProcCol_Click"/>
+                                </GridViewColumn>
+                                <GridViewColumn Width="130" DisplayMemberBinding="{Binding stateStr}">
+                                    <GridViewColumnHeader Content="Estado" Tag="stateStr" Click="ProcCol_Click"/>
+                                </GridViewColumn>
+                                <GridViewColumn Width="120">
+                                    <GridViewColumnHeader Content="Afinidade"/>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate><TextBlock Text="{Binding affinityHex}" FontFamily="Consolas"/></DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="pageGovernor" Grid.Row="1" Visibility="Collapsed" Margin="22,18,22,22">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="PROCESS GOVERNOR" Style="{StaticResource Title}" FontSize="18"/>
+                        <TextBlock Text="automático no jogo detectado, com controles manuais opcionais e restauração segura"
+                                   Style="{StaticResource Sub}"/>
+                    </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <TextBlock x:Name="txtGovCount" Text="0 processos visíveis" Style="{StaticResource Muted}"
+                                       VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <Border Style="{StaticResource GlassChip}" Margin="0,0,8,0">
+                            <TextBlock x:Name="txtGovAutoStatus" Text="AUTO · MONITORANDO"
+                                       Foreground="{DynamicResource Accent3Brush}" FontSize="10" FontWeight="Bold"/>
+                        </Border>
+                        <Border Style="{StaticResource GlassChip}">
+                            <TextBlock Text="PROCESSOS CRÍTICOS PROTEGIDOS" Foreground="{DynamicResource SuccessBrush}"
+                                       FontSize="10" FontWeight="Bold"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,12">
+                    <Border Style="{StaticResource Panel}" Margin="0,0,8,0" Padding="14,11">
+                        <StackPanel><TextBlock Text="SELECIONADO" Style="{StaticResource SectionHeader}"/>
+                            <TextBlock x:Name="txtGovSelected" Text="nenhum" Style="{StaticResource MetricMid}" TextTrimming="CharacterEllipsis"/></StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource Panel}" Margin="0,0,8,0" Padding="14,11">
+                        <StackPanel><TextBlock Text="CPU" Style="{StaticResource SectionHeader}"/>
+                            <TextBlock x:Name="txtGovCpu" Text="—" Style="{StaticResource MetricMid}" Foreground="{DynamicResource Accent3Brush}"/></StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource Panel}" Margin="0,0,8,0" Padding="14,11">
+                        <StackPanel><TextBlock Text="MEMÓRIA" Style="{StaticResource SectionHeader}"/>
+                            <TextBlock x:Name="txtGovRam" Text="—" Style="{StaticResource MetricMid}"/></StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource Panel}" Padding="14,11">
+                        <StackPanel><TextBlock Text="AFINIDADE" Style="{StaticResource SectionHeader}"/>
+                            <TextBlock x:Name="txtGovAffinity" Text="—" Style="{StaticResource MetricMid}" FontFamily="Consolas"/></StackPanel>
+                    </Border>
+                </UniformGrid>
+
+                <StackPanel Grid.Row="2">
+                    <Border Style="{StaticResource Panel}" Padding="14,10" Margin="0,0,0,10"
+                            BorderBrush="{DynamicResource BorderHiBrush}">
+                        <TextBlock x:Name="txtGovAutoDetail" Style="{StaticResource Sub}" TextWrapping="Wrap"
+                                   Text="No modo automático, o motor acompanha o jogo e restaura as alterações da sessão ao terminar. Os controles manuais abaixo afetam somente o processo selecionado e permanecem até você alterá-los ou o processo encerrar."/>
+                    </Border>
+                    <Border Style="{StaticResource Panel}" Padding="14,10" Margin="0,0,0,10">
+                        <DockPanel LastChildFill="True">
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                <TextBlock Text="Perfil:" Style="{StaticResource Muted}" VerticalAlignment="Center" Margin="0,0,7,0"/>
+                                <ComboBox x:Name="cmbGovernorProfile" SelectedIndex="1" Style="{StaticResource DarkCombo}" MinWidth="130">
+                                    <ComboBoxItem Content="Eficiência"/>
+                                    <ComboBoxItem Content="Equilibrado"/>
+                                    <ComboBoxItem Content="Performance"/>
+                                </ComboBox>
+                                <Button x:Name="btnGovernorProfileApply" Content="Aplicar perfil" Style="{StaticResource BtnPrimary}" Margin="8,0,0,0"
+                                        Click="btnGovernorProfile_Click"/>
+                            </StackPanel>
+                            <TextBox x:Name="txtGovernorFilter" Width="360" HorizontalAlignment="Left"
+                                      TextChanged="txtGovernorFilter_TextChanged" ToolTip="Filtrar processos"/>
+                        </DockPanel>
+                    </Border>
+                    <Border Style="{StaticResource Panel}" Padding="14,10" Margin="0,0,0,10">
+                        <WrapPanel VerticalAlignment="Center">
+                            <ComboBox x:Name="cmbGovPriority" SelectedIndex="2" Style="{StaticResource DarkCombo}" MinWidth="115" Margin="0,0,7,0">
+                                <ComboBoxItem Content="Idle"/><ComboBoxItem Content="Abaixo normal"/><ComboBoxItem Content="Normal"/>
+                                <ComboBoxItem Content="Acima normal"/><ComboBoxItem Content="Alta"/>
+                            </ComboBox>
+                            <ComboBox x:Name="cmbGovIo" SelectedIndex="2" Style="{StaticResource DarkCombo}" MinWidth="95" Margin="0,0,7,0">
+                                <ComboBoxItem Content="I/O idle"/><ComboBoxItem Content="I/O baixa"/><ComboBoxItem Content="I/O normal"/><ComboBoxItem Content="I/O alta"/>
+                            </ComboBox>
+                            <ComboBox x:Name="cmbGovMemory" SelectedIndex="1" Style="{StaticResource DarkCombo}" MinWidth="110" Margin="0,0,7,0">
+                                <ComboBoxItem Content="Mem. baixa"/><ComboBoxItem Content="Mem. normal"/><ComboBoxItem Content="Mem. alta"/>
+                            </ComboBox>
+                            <CheckBox x:Name="chkGovEco" Content="EcoQoS" Style="{StaticResource TweakToggle}" Margin="4,5,12,0"
+                                      ToolTip="Marca o processo para eficiência de energia (EcoQoS); desmarque para performance plena."/>
+                            <Button x:Name="btnGovernorApply" Content="Aplicar" Click="btnGovernorAdvanced_Click" Margin="0,0,7,0"
+                                    ToolTip="Aplica prioridade, EcoQoS, I/O e memória ao processo selecionado"/>
+                            <Button x:Name="btnGovernorSuspend" Content="Suspender" Click="btnGovernorSuspend_Click" Margin="0,0,7,0"
+                                    ToolTip="Congela o processo selecionado até você clicar Retomar (ou o processo encerrar). Pede confirmação."/>
+                            <Button x:Name="btnGovernorResume" Content="Retomar" Click="btnGovernorResume_Click" Margin="0,0,7,0"
+                                    ToolTip="Retoma um processo suspenso pelo botão acima (o motor também retoma automaticamente ao encerrar)."/>
+                            <Button x:Name="btnGovernorTrim" Content="Trim RAM" Click="btnGovernorTrim_Click"
+                                    ToolTip="Libera memória em standby deste processo (working set)"/>
+                        </WrapPanel>
+                    </Border>
+                </StackPanel>
+
+                <Border Grid.Row="3" Style="{StaticResource Panel}" Padding="6">
+                    <ListView x:Name="lstGovernor" SelectionChanged="lstGovernor_SelectionChanged" AlternationCount="2">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Padding" Value="4,3"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Style.Triggers>
+                                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                        <Setter Property="Background" Value="{DynamicResource SubtleOverlayBrush}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource Bg3Brush}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource SelectedItemBrush}"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Processo" Width="280">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Grid Width="22" Height="22" Margin="0,0,8,0">
+                                                    <TextBlock Text="&#xE8D4;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                                               Foreground="{DynamicResource Fg2Brush}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                    <Image Source="{Binding icon}" Width="20" Height="20" Stretch="Uniform">
+                                                        <Image.Style>
+                                                            <Style TargetType="Image">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding icon}" Value="{x:Null}">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Image.Style>
+                                                    </Image>
+                                                </Grid>
+                                                <TextBlock Text="{Binding name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="PID" Width="70">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate><TextBlock Text="{Binding pid}" FontFamily="Consolas"/></DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="CPU" Width="70" DisplayMemberBinding="{Binding cpuStr}"/>
+                                <GridViewColumn Header="RAM" Width="80" DisplayMemberBinding="{Binding ramStr}"/>
+                                <GridViewColumn Header="Prioridade" Width="125" DisplayMemberBinding="{Binding klass}"/>
+                                <GridViewColumn Header="Afinidade" Width="150">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate><TextBlock Text="{Binding affinityHex}" FontFamily="Consolas"/></DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Estado" Width="130">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{DynamicResource SubtleOverlayBrush}" BorderBrush="{Binding stateBrush}" BorderThickness="1"
+                                                    CornerRadius="8" Padding="7,2" HorizontalAlignment="Left">
+                                                <TextBlock Text="{Binding stateStr}" Foreground="{Binding stateBrush}" FontSize="10" FontWeight="Bold"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="pageServices" Grid.Row="1" Visibility="Collapsed" Margin="22,18,22,22">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                    <TextBlock Text="SERVIÇOS &amp; OTIMIZAÇÃO" Style="{StaticResource Title}" FontSize="18"/>
+                    <TextBlock x:Name="txtSvcCount" Text="Carregando serviços..." Style="{StaticResource Muted}"/>
+                </StackPanel>
+                <Border Grid.Row="1" Style="{StaticResource Panel}" Padding="16,13" Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Border Style="{StaticResource GlassChip}" Padding="8,3" Margin="0,0,9,0">
+                                    <TextBlock Text="AUTO-RESTORE" Foreground="{DynamicResource SuccessBrush}" FontSize="10" FontWeight="Bold"/>
+                                </Border>
+                                <TextBlock Text="Serviços opcionais durante o jogo" Style="{StaticResource Title}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock x:Name="txtSvcPlanSummary"
+                                       Text="A lista abaixo mostra exatamente o que será pausado ou parado. Nada crítico é alterado."
+                                       Style="{StaticResource Muted}" Margin="0,7,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <CheckBox x:Name="chkSvcAuto" Grid.Column="1" Content="Ativar no jogo" Tag="pause_services_gaming"
+                                  Style="{StaticResource TweakToggle}" Margin="18,0,0,0" VerticalAlignment="Center"
+                                  Checked="Toggle_Changed" Unchecked="Toggle_Changed"
+                                  ToolTip="Aplica somente aos alvos marcados como PAUSAR/PARAR e restaura no fim da sessão."/>
+                    </Grid>
+                </Border>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBox x:Name="txtSvcFilter" Width="190" TextChanged="txtSvcFilter_TextChanged"
+                             ToolTip="Filtrar por nome/descrição"/>
+                    <ComboBox x:Name="cmbSvcState" SelectedIndex="0" SelectionChanged="cmbSvcState_Changed" Margin="8,0,0,0"
+                              Style="{StaticResource DarkCombo}" MinWidth="175">
+                        <ComboBoxItem Content="alvos da otimização"/>
+                        <ComboBoxItem Content="ativos + pausados"/>
+                        <ComboBoxItem Content="todos"/>
+                    </ComboBox>
+                    <Button x:Name="btnSvcStop" Content="Parar" Style="{StaticResource BtnDanger}" Margin="8,0,0,0"
+                            Click="btnSvcStop_Click"
+                            ToolTip="Para o serviço selecionado (modo manual; o modo automático só restaura o que ele alterar)"/>
+                    <Button x:Name="btnSvcPause" Content="Pausar / retomar" Margin="6,0,0,0"
+                            Click="btnSvcPause_Click" ToolTip="Pausa o serviço; clique de novo para retomar"/>
+                    <Button x:Name="btnSvcStart" Content="Iniciar" Style="{StaticResource BtnPrimary}" Margin="6,0,0,0"
+                            Click="btnSvcStart_Click" ToolTip="Inicia um serviço parado"/>
+                </StackPanel>
+                <Border Grid.Row="3" Style="{StaticResource Panel}" Padding="6">
+                    <ListView x:Name="lstServices" SelectionChanged="lstServices_SelectionChanged" AlternationCount="2">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Padding" Value="4,3"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Style.Triggers>
+                                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                        <Setter Property="Background" Value="{DynamicResource SubtleOverlayBrush}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource Bg3Brush}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource SelectedItemBrush}"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Serviço" Width="155">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Width="7" Height="7" Fill="{Binding planBrush}" Margin="2,0,8,0" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding name}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Descrição" Width="225">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding display}" TextTrimming="CharacterEllipsis" ToolTip="{Binding display}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Plano" Width="105">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{DynamicResource SubtleOverlayBrush}" BorderBrush="{Binding planBrush}" BorderThickness="1"
+                                                    CornerRadius="8" Padding="7,2" HorizontalAlignment="Left">
+                                                <TextBlock Text="{Binding planStr}" Foreground="{Binding planBrush}" FontSize="10" FontWeight="Bold"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Por que otimizar" Width="230">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding reasonStr}" Foreground="{DynamicResource Fg1Brush}"
+                                                       TextTrimming="CharacterEllipsis" ToolTip="{Binding reasonStr}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Estado" Width="90">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding stateStr}" Foreground="{Binding stateBrush}" FontWeight="SemiBold"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="PID" Width="60" DisplayMemberBinding="{Binding pid}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="pageBench" Grid.Row="1" Visibility="Collapsed" Margin="22,18,22,22">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                    <TextBlock Text="BENCH DE LATÊNCIA" Style="{StaticResource Title}" FontSize="18"/>
+                    <TextBlock Style="{StaticResource Sub}" Text="mede a latência real do seu sistema: resolução do timer, jitter de scheduling e I/O em SSD sem cache — score composto 0-100. Rode ANTES e DEPOIS de mudar tweaks."/>
+                </StackPanel>
+                <Border Grid.Row="1" Style="{StaticResource Panel}" Padding="18,14" Margin="0,0,0,14">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="duração:" Style="{StaticResource Muted}" VerticalAlignment="Center"/>
+                                <ComboBox x:Name="cmbBenchDur" SelectedIndex="1" Margin="8,0,0,0"
+                                          Style="{StaticResource DarkCombo}" MinWidth="100">
+                                    <ComboBoxItem Content="rápido (1s)"/>
+                                    <ComboBoxItem Content="normal (1.5s)"/>
+                                    <ComboBoxItem Content="longo (3s)"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <TextBlock x:Name="txtBenchStatus" Text="Pronto." Style="{StaticResource Muted}" Margin="0,10,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button x:Name="btnExportTelemetry" Content="Exportar JSON/CSV" Style="{StaticResource BtnGhost}"
+                                    Click="btnExportTelemetry_Click" Margin="0,0,8,0"
+                                    ToolTip="Exporta somente dados locais; nada é enviado automaticamente"/>
+                            <Button x:Name="btnRunBench" Content="Rodar bench" Style="{StaticResource BtnPrimary}"
+                                    Click="btnRunBench_Click"
+                                    ToolTip="(Ctrl+Shift+B) Mede resolução do timer, scheduling e I/O"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="2" Style="{StaticResource Panel}" Padding="22,18" Margin="0,0,0,14">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="SCORE" Style="{StaticResource SectionHeader}" Foreground="{DynamicResource AccentBrush}"/>
+                            <TextBlock x:Name="txtBenchScore" Style="{StaticResource MetricBig}" FontSize="26" Text="·" Margin="0,4,0,0"/>
+                            <TextBlock x:Name="txtBenchScoreSub" Text="composto 0-100" Style="{StaticResource Muted}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="TIMER" Style="{StaticResource SectionHeader}"/>
+                            <TextBlock x:Name="txtBenchTimer" Style="{StaticResource MetricBig}" FontSize="26" Text="·" Margin="0,4,0,0"/>
+                            <TextBlock x:Name="txtBenchTimerSub" Text="resolução real do timer" Style="{StaticResource Muted}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="SCHED P95" Style="{StaticResource SectionHeader}"/>
+                            <TextBlock x:Name="txtBenchP95" Style="{StaticResource MetricBig}" FontSize="26" Text="·" Margin="0,4,0,0"/>
+                            <TextBlock Text="jitter de scheduling" Style="{StaticResource Muted}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3">
+                            <TextBlock Text="I/O P95" Style="{StaticResource SectionHeader}"/>
+                            <TextBlock x:Name="txtBenchIo" Style="{StaticResource MetricBig}" FontSize="26" Text="·" Margin="0,4,0,0"/>
+                            <TextBlock Text="SSD 4KB sem cache" Style="{StaticResource Muted}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="PICO" Style="{StaticResource SectionHeader}"/>
+                            <TextBlock x:Name="txtBenchMax" Style="{StaticResource MetricBig}" FontSize="26" Text="·" Margin="0,4,0,0" Foreground="{DynamicResource DangerBrush}"/>
+                            <TextBlock Text="pior caso" Style="{StaticResource Muted}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="3" Style="{StaticResource Panel}" Padding="22,16" MinHeight="210">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <StackPanel>
+                                <TextBlock Text="HISTÓRICO DE P95 (SCHEDULER)" Style="{StaticResource SectionHeader}" Foreground="{DynamicResource Accent3Brush}"/>
+                                <TextBlock Text="latência por execução · menor é melhor" Style="{StaticResource Muted}"/>
+                            </StackPanel>
+                            <TextBlock x:Name="txtBenchRuns" Text="0 execuções" Style="{StaticResource Muted}"
+                                       HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        </Grid>
+                        <Grid Grid.Row="1" Margin="0,12,0,8">
+                            <local:Sparkline x:Name="sparkBench" Stroke="{DynamicResource Accent3Brush}"/>
+                            <TextBlock x:Name="txtBenchEmpty" Text="Rode o bench para começar o histórico"
+                                       Style="{StaticResource Muted}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <TextBlock x:Name="txtBenchBest" Text="melhor: —" Style="{StaticResource Muted}"/>
+                            <TextBlock x:Name="txtBenchTrend" Text="tendência: —" Style="{StaticResource Muted}" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="txtBenchWorst" Text="pior: —" Style="{StaticResource Muted}" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <TextBlock x:Name="txtBenchAB" Grid.Row="3" Text="A/B de sessão: rode um bench fora do jogo primeiro (vira baseline)"
+                                   Style="{StaticResource Muted}" Margin="0,12,0,0" TextWrapping="Wrap"
+                                   ToolTip="P95 medido fora de sessão de jogo (baseline) contra o P95 medido com o jogo otimizado rodando. O baseline se atualiza a cada novo bench fora de sessão."/>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="pageGames" Grid.Row="1" Visibility="Collapsed" Margin="22,18,22,22">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                    <TextBlock Text="JOGOS &amp; EXCEÇÕES" Style="{StaticResource Title}" FontSize="18"/>
+                    <TextBlock Text="jogos detectados automaticamente (50+ embutidos) · exceções nunca são limitadas"
+                               Style="{StaticResource Sub}"/>
+                </StackPanel>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="320"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" Style="{StaticResource Panel}" Margin="0,0,12,0">
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Top" Text="JOGOS ADICIONADOS" Style="{StaticResource SectionHeader}" Margin="0,0,0,8"/>
+                            <ListBox x:Name="lstGames" FontFamily="Consolas" FontSize="12"/>
+                        </DockPanel>
+                    </Border>
+                    <StackPanel Grid.Column="1">
+                        <Border Style="{StaticResource Panel}">
+                            <StackPanel>
+                                <TextBlock Text="ADICIONAR JOGO" Style="{StaticResource SectionHeader}"/>
+                                <TextBlock Text="nome do .exe (ex.: meujogo.exe)" Style="{StaticResource Muted}" Margin="0,6,0,6"/>
+                                <TextBox x:Name="txtAddGame"/>
+                                <Button x:Name="btnAddGame" Content="Adicionar" Style="{StaticResource BtnPrimary}" Margin="0,10,0,0" Click="btnAddGame_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Panel}" Margin="0,12,0,0" Padding="16,14">
+                            <StackPanel>
+                                <TextBlock Text="EXCEÇÕES DO LIMITADOR" Style="{StaticResource SectionHeader}"/>
+                                <TextBlock Text="processos que continuam normais durante o jogo (Spotify, Discord, OBS)"
+                                           Style="{StaticResource Muted}" FontSize="11" TextWrapping="Wrap" Margin="0,4,0,8"/>
+                                <TextBox x:Name="txtAddExclusion"/>
+                                <Button x:Name="btnAddExclusion" Content="Excluir processo" Style="{StaticResource BtnPrimary}" Margin="0,8,0,0"
+                                        Click="btnAddExclusion_Click"/>
+                                <TextBlock Text="excluídos agora:" Style="{StaticResource Muted}" FontSize="11" Margin="0,12,0,4"/>
+                                <ListBox x:Name="lstExclusions" MaxHeight="160" FontFamily="Consolas" FontSize="11.5">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding}" FontFamily="Consolas" FontSize="11.5" VerticalAlignment="Center"/>
+                                                <Button Grid.Column="1" Content="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="10" Padding="6,1" Margin="8,0,0,0"
+                                                        Click="btnRemoveExclusion_Click" Tag="{Binding}"
+                                                        AutomationProperties.Name="Remover exceção"
+                                                        ToolTip="Remove da lista de exceções"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <ScrollViewer x:Name="pageAbout" Grid.Row="1" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="22,18,22,22">
+                    <TextBlock Text="SOBRE" Style="{StaticResource Title}" FontSize="18"/>
+                    <TextBlock x:Name="txtAboutLine" Text="KT Game Booster v1.0 · por kelvenapk" Style="{StaticResource Sub}" Margin="0,2,0,14"/>
+                    <Border Style="{StaticResource Panel}" Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="Otimizador de FPS para jogos no Windows · engine C++ nativa embarcada + UI WPF in-proc."
+                                       Style="{StaticResource Sub}" TextWrapping="Wrap"/>
+                            <TextBlock Height="10"/>
+                            <TextBlock Style="{StaticResource Sub}" TextWrapping="Wrap"
+                                       Text="O motor C++ (ktengine.dll) vive dentro do EXE da UI e roda in-proc · sem named pipe, sem processo de fundo. A detecção de jogos usa ETW com fallback para polling, e todos os tweaks têm restauração garantida ao encerrar: prioridades, afinidades, planos de energia, timer de sistema e o shell do Windows no modo extremo."/>
+                            <TextBlock Height="14"/>
+                            <TextBlock Text="Avisos" Style="{StaticResource SectionHeader}"/>
+                            <TextBlock Style="{StaticResource Sub}" TextWrapping="Wrap" Opacity="0.8"
+                                       Text="• O app não encerra Explorer/DWM nem suspende winlogon; journals antigos ainda podem ser recuperados.&#10;• Algumas operações de prioridade e serviço dependem das permissões do processo.&#10;• Projeto por kelvenapk · github.com/kelvenapk."/>
+                            <Button Content="GitHub · kelvenapk" Style="{StaticResource BtnPrimary}" HorizontalAlignment="Left"
+                                    Margin="0,18,0,0" Click="btnGitHub_Click"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource Panel}" Padding="20" Margin="0,12,0,0" BorderBrush="{DynamicResource BorderHiBrush}">
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="ATUALIZAÇÕES AUTOMÁTICAS" Style="{StaticResource SectionHeader}"/>
+                                <TextBlock x:Name="txtUpdateStatus" Text="GitHub · aguardando verificação"
+                                           Style="{StaticResource Sub}" Margin="0,5,14,0" TextWrapping="Wrap"/>
+                                <TextBlock x:Name="txtUpdateChannel" Text="canal: verificando"
+                                           Style="{StaticResource Muted}" Margin="0,4,14,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button Content="Verificar agora" Click="btnCheckUpdate_Click" Margin="0,0,8,0"/>
+                                <Button x:Name="btnInstallUpdate" Content="Reiniciar e instalar" Style="{StaticResource BtnPrimary}"
+                                        Visibility="Collapsed" Click="btnInstallUpdate_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Window>

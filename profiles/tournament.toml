@@ -1,0 +1,35 @@
+﻿# Perfil: tournament (prioridade alta e ajustes de jogo, sem realtime)
+# Ideal para competicoes onde a latencia e a prioridade absoluta importam.
+[config]
+poll_interval_ms = 500
+
+[features]
+tournament_mode = true
+background_limiter = true
+eco_qos_background = true
+io_priority_background = true
+io_priority_game_high = true
+high_performance_plan = true
+turbo_boost = true
+core_parking_disable = true
+disable_c_states = false
+suspend_gameinput_threads = false
+disable_priority_boost = true
+
+# Otimizacoes de latencia do jogo (forcadas pelo tournament_mode, mas deixadas
+# explicitas aqui para clareza e hot-reload sem perder o perfil)
+dwm_mmcss = true
+dwm_thread_priority = true
+gpu_priority = true
+mmcss_game = true
+page_priority_game = true
+memory_priority_game_high = true
+boost_input_threads = true
+
+# v2.1: capture off + monitor de FPS real
+game_dvr_disable = true
+fps_monitor = true
+
+# Máximo foco no jogo escolhido
+game_tree_boost = true
+pause_services_gaming = false

@@ -1,0 +1,93 @@
+name: Release tagged
+
+on:
+  push:
+    tags:
+      - 'v1.0-relaunch.*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Obter código
+        uses: actions/checkout@v7.0.1
+
+      - name: Validar tag e injetar CurrentTag
+        shell: pwsh
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tag = $env:TAG
+          if ($tag -notmatch '^v1\.0-relaunch\.\d+$') {
+            throw "Tag fora do esquema do canal de atualização: $tag"
+          }
+          $path = 'ui/KTGameBoosterUI/UpdateService.cs'
+          $content = Get-Content -LiteralPath $path -Raw
+          $pattern = 'internal const string CurrentTag = "v1\.0-relaunch\.\d+";'
+          if (-not ($content -match $pattern)) {
+            throw 'Linha CurrentTag não encontrada em UpdateService.cs.'
+          }
+          $content = $content -replace $pattern, ('internal const string CurrentTag = "' + $tag + '";')
+          [System.IO.File]::WriteAllText((Join-Path $PWD $path), $content)
+          Write-Host "CurrentTag injetado: $tag"
+
+      - name: Compilar release x64
+        shell: cmd
+        run: build.bat final
+
+      - name: Empacotar e executar smoke do motor
+        shell: pwsh
+        run: ./scripts/package-release.ps1 -Version 1.0 -SkipBuild
+
+      - name: Instalar compilador do instalador
+        shell: pwsh
+        run: choco install nsis --yes --no-progress
+
+      - name: Gerar instalador único e SHA-256
+        shell: pwsh
+        run: ./scripts/package-installer.ps1 -Version 1.0 -SkipPackage
+
+      - name: Guardar pacotes da execução
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: KTGameBooster-v1.0-relaunch-win-x64
+          path: |
+            dist/KTGameBooster-v1.0-win-x64.zip
+            dist/KTGameBooster-v1.0-win-x64.zip.sha256
+            dist/KTGameBooster-v1.0-win-x64.exe
+            dist/KTGameBooster-v1.0-win-x64.exe.sha256
+            dist/KTGameBooster-v1.0-Setup.exe
+            dist/KTGameBooster-v1.0-Setup.exe.sha256
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Publicar draft prerelease
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tag = $env:TAG
+          gh release create `
+            $tag `
+            "dist/KTGameBooster-v1.0-win-x64.zip" `
+            "dist/KTGameBooster-v1.0-win-x64.zip.sha256" `
+            "dist/KTGameBooster-v1.0-win-x64.exe" `
+            "dist/KTGameBooster-v1.0-win-x64.exe.sha256" `
+            "dist/KTGameBooster-v1.0-Setup.exe" `
+            "dist/KTGameBooster-v1.0-Setup.exe.sha256" `
+            --repo ${{ github.repository }} `
+            --draft --prerelease `
+            --title "KT Game Booster $tag" `
+            --notes "Build oficial do canal v1.0-relaunch em EXE único: o executável carrega motor, config e perfis embutidos e se auto-configura na primeira execução. ZIP e EXE direto com SHA-256 publicados; o auto-update do app valida o hash antes de aplicar. Desmarque o rascunho (draft) para publicar aos usuários."
