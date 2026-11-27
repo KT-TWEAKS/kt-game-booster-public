@@ -1,0 +1,76 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="Bg0">#B80A0B0E</Color>
+    <Color x:Key="Bg1">#BB0F1114</Color>
+    <Color x:Key="Bg2">#D616191E</Color>
+    <Color x:Key="Bg3">#DA262A30</Color>
+    <Color x:Key="Bg4">#E2353B43</Color>
+    <Color x:Key="PanelColor">#B8191B21</Color>
+    <Color x:Key="PanelHi">#C92A2F36</Color>
+    <Color x:Key="BorderSubtle">#2EFFFFFF</Color>
+    <Color x:Key="BorderHi">#80FFFFFF</Color>
+    <Color x:Key="AccentColor">#9B7CFF</Color>
+    <Color x:Key="Accent2Color">#6D4AE0</Color>
+    <Color x:Key="Accent3Color">#56D9E8</Color>
+    <Color x:Key="Fg0Color">#F3F3F4</Color>
+    <Color x:Key="Fg1Color">#B7B7BD</Color>
+    <Color x:Key="Fg2Color">#76767E</Color>
+    <Color x:Key="SuccessColor">#34D399</Color>
+    <Color x:Key="WarnColor">#FBBF24</Color>
+    <Color x:Key="DangerColor">#F87171</Color>
+    <Color x:Key="InfoColor">#9B7CFF</Color>
+
+    <SolidColorBrush x:Key="Bg0Brush" Color="{StaticResource Bg0}"/>
+    <SolidColorBrush x:Key="Bg1Brush" Color="{StaticResource Bg1}"/>
+    <SolidColorBrush x:Key="Bg2Brush" Color="{StaticResource Bg2}"/>
+    <SolidColorBrush x:Key="Bg3Brush" Color="{StaticResource Bg3}"/>
+    <SolidColorBrush x:Key="Bg4Brush" Color="{StaticResource Bg4}"/>
+    <SolidColorBrush x:Key="PanelBrush" Color="{StaticResource PanelColor}"/>
+    <SolidColorBrush x:Key="PanelHiBrush" Color="{StaticResource PanelHi}"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderSubtle}"/>
+    <SolidColorBrush x:Key="BorderHiBrush" Color="{StaticResource BorderHi}"/>
+    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+    <SolidColorBrush x:Key="Accent2Brush" Color="{StaticResource Accent2Color}"/>
+    <SolidColorBrush x:Key="Accent3Brush" Color="{StaticResource Accent3Color}"/>
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}"/>
+    <SolidColorBrush x:Key="WarnBrush" Color="{StaticResource WarnColor}"/>
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}"/>
+    <SolidColorBrush x:Key="Fg0Brush" Color="{StaticResource Fg0Color}"/>
+    <SolidColorBrush x:Key="Fg1Brush" Color="{StaticResource Fg1Color}"/>
+    <SolidColorBrush x:Key="Fg2Brush" Color="{StaticResource Fg2Color}"/>
+
+    <SolidColorBrush x:Key="CardShadowBrush" Color="#000000"/>
+    <SolidColorBrush x:Key="TitleBarBrush" Color="#CC10121A"/>
+    <SolidColorBrush x:Key="OnAccentBrush" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="SubtleOverlayBrush" Color="#6E2A3A5E"/>
+    <SolidColorBrush x:Key="SelectedItemBrush" Color="#664B5F9A"/>
+
+    <SolidColorBrush x:Key="SuccessSubtleBrush" Color="#1F34D399"/>
+    <SolidColorBrush x:Key="SuccessBorderBrush" Color="#5934D399"/>
+    <SolidColorBrush x:Key="WarnSubtleBrush" Color="#1FFBBF24"/>
+    <SolidColorBrush x:Key="WarnBorderBrush" Color="#59FBBF24"/>
+    <SolidColorBrush x:Key="DangerSubtleBrush" Color="#1FF87171"/>
+    <SolidColorBrush x:Key="DangerBorderBrush" Color="#59F87171"/>
+    <SolidColorBrush x:Key="DangerStrongBrush" Color="#EF4444"/>
+    <SolidColorBrush x:Key="InfoSubtleBrush" Color="#1F9B7CFF"/>
+    <SolidColorBrush x:Key="InfoBorderBrush" Color="#599B7CFF"/>
+    <SolidColorBrush x:Key="InfoBrush" Color="#FF9B7CFF"/>
+    <SolidColorBrush x:Key="GridLineBrush" Color="#24FFFFFF"/>
+
+    <SolidColorBrush x:Key="RowHoverBrush" Color="#10FFFFFF"/>
+    <SolidColorBrush x:Key="RowSelectedBrush" Color="#269B7CFF"/>
+    <SolidColorBrush x:Key="RowAlternatingBrush" Color="#0AFFFFFF"/>
+    <SolidColorBrush x:Key="RowGameBrush" Color="#1A9B7CFF"/>
+    <SolidColorBrush x:Key="RowChildBrush" Color="#0DFFFFFF"/>
+    <SolidColorBrush x:Key="RowThrottledBrush" Color="#1AFBBF24"/>
+    <SolidColorBrush x:Key="RowCriticalBrush" Color="#1AF87171"/>
+
+    <SolidColorBrush x:Key="TopBarBrush" Color="#CC0E1015"/>
+
+    <SolidColorBrush x:Key="AccentGradBrush" Color="{StaticResource AccentColor}"/>
+
+    <SolidColorBrush x:Key="PanelHeroBrush" Color="#20111018"/>
+
+    <SolidColorBrush x:Key="PanelHeroBorderBrush" Color="#4A9B7CFF"/>
+</ResourceDictionary>

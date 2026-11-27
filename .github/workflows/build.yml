@@ -1,0 +1,49 @@
+name: Build x64
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-x64:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Obter código
+        uses: actions/checkout@v7.0.1
+
+      - name: Compilar release x64
+        shell: cmd
+        run: build.bat final
+
+      - name: Empacotar e executar smoke do motor
+        shell: pwsh
+        run: ./scripts/package-release.ps1 -Version 1.0 -SkipBuild
+
+      - name: Instalar compilador do instalador
+        shell: pwsh
+        run: choco install nsis --yes --no-progress
+
+      - name: Gerar instalador único e SHA-256
+        shell: pwsh
+        run: ./scripts/package-installer.ps1 -Version 1.0 -SkipPackage
+
+      - name: Guardar pacotes da execução
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: KTGameBooster-v1.0-win-x64
+          path: |
+            dist/KTGameBooster-v1.0-win-x64.zip
+            dist/KTGameBooster-v1.0-win-x64.zip.sha256
+            dist/KTGameBooster-v1.0-win-x64.exe
+            dist/KTGameBooster-v1.0-win-x64.exe.sha256
+            dist/KTGameBooster-v1.0-Setup.exe
+            dist/KTGameBooster-v1.0-Setup.exe.sha256
+          if-no-files-found: error
+          retention-days: 7

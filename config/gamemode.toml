@@ -1,0 +1,651 @@
+﻿# KT Game Booster v1.0 - configuração padrão
+# Mantenha este arquivo ao lado de KTGameBooster.exe para personalizar o motor.
+# Se ele estiver ausente ou inválido, os padrões incorporados serão usados.
+
+[config]
+poll_interval_ms = 1000
+
+[features]
+dwm_mmcss = true
+dwm_thread_priority = true
+gpu_priority = true
+background_limiter = true
+thread_power_background_throttle = true
+thread_power_game_unthrottle = true
+io_priority_background = true
+io_priority_game_high = true
+eco_qos_background = true
+suspend_gameinput_threads = false
+disable_c_states = false
+disable_priority_boost = true
+background_cpu_pin = false
+boost_input_threads = true
+# Governor automático do jogo: baixa latência, prioridade de memória e
+# acompanhamento de threads sem precisar abrir a tela Governor.
+mmcss_game = true
+page_priority_game = true
+memory_priority_game_high = true
+memory_compression_disable = false
+gpu_hardware_scheduling = false
+auto_profile_switching = false
+# Segurança anticheat: quando um jogo com AC de kernel/de linha lançamentos
+# (Valorant, Fortnite, CoD, PUBG...) é detectado, a sessão desliga
+# automaticamente suspensão de threads/serviços e o limitador de fundo,
+# mantendo só os levers user-mode que não acionam o anticheat.
+anticheat_safe_mode = true
+# Par de planos de energia gaming (GUIDs hex sem traco, ex.: 8c5e7fda...)
+# gaming_power_plans = true
+# power_plan_game_guid = "..."
+# power_plan_off_guid = "..."
+gaming_power_plans = false
+power_plan_game_guid = ""
+power_plan_off_guid = ""
+
+# Foco no processo escolhido + serviços
+game_tree_boost = true
+pause_services_gaming = false
+
+# Alavancas de FPS v2.1
+# Game DVR/GameBar capture off durante a sessão (reversível, HKCU)
+game_dvr_disable = true
+# Monitor de FPS/frame-time real via ETW Present (dashboard)
+fps_monitor = true
+
+[background_cpu]
+auto_load = false
+main_frame_cpu_pct = 20
+worker_cpu_pct = 3
+cpus = []
+
+# Game targets
+[[process]]
+exe = "cs2.exe"
+priority_class = "high"
+[[process]]
+exe = "FortniteClient-Win64-Shipping.exe"
+priority_class = "high"
+[[process]]
+exe = "RocketLeague.exe"
+priority_class = "high"
+[[process]]
+exe = "VALORANT-Win64-Shipping.exe"
+priority_class = "high"
+[[process]]
+exe = "apexlegends.exe"
+priority_class = "high"
+[[process]]
+exe = "overwatch2.exe"
+priority_class = "high"
+[[process]]
+exe = "valorant.exe"
+priority_class = "high"
+[[process]]
+exe = "r5apex.exe"
+priority_class = "high"
+[[process]]
+exe = "GTA5.exe"
+priority_class = "high"
+[[process]]
+exe = "GTA5_enhanced.exe"
+priority_class = "high"
+[[process]]
+exe = "RDR2.exe"
+priority_class = "high"
+[[process]]
+exe = "Cyberpunk2077.exe"
+priority_class = "high"
+[[process]]
+exe = "eldenring.exe"
+priority_class = "high"
+[[process]]
+exe = "DarkSoulsIII.exe"
+priority_class = "high"
+[[process]]
+exe = "Sekiro.exe"
+priority_class = "high"
+[[process]]
+exe = "Starfield.exe"
+priority_class = "high"
+[[process]]
+exe = "HogwartsLegacy.exe"
+priority_class = "high"
+[[process]]
+exe = "SpiderMan.exe"
+priority_class = "high"
+[[process]]
+exe = "SpiderManPC.exe"
+priority_class = "high"
+[[process]]
+exe = "MilesMorales.exe"
+priority_class = "high"
+[[process]]
+exe = "GodOfWar.exe"
+priority_class = "high"
+[[process]]
+exe = "HorizonZeroDawn.exe"
+priority_class = "high"
+[[process]]
+exe = "HorizonForbiddenWest.exe"
+priority_class = "high"
+[[process]]
+exe = "LastOfUsPart1.exe"
+priority_class = "high"
+[[process]]
+exe = "Uncharted.exe"
+priority_class = "high"
+[[process]]
+exe = "Returnal.exe"
+priority_class = "high"
+[[process]]
+exe = "RainbowSix.exe"
+priority_class = "high"
+[[process]]
+exe = "RainbowSix_Vulkan.exe"
+priority_class = "high"
+[[process]]
+exe = "TheDivision2.exe"
+priority_class = "high"
+[[process]]
+exe = "ForzaHorizon5.exe"
+priority_class = "high"
+[[process]]
+exe = "ForzaMotorsport.exe"
+priority_class = "high"
+[[process]]
+exe = "HaloInfinite.exe"
+priority_class = "high"
+[[process]]
+exe = "Warframe.x64.exe"
+priority_class = "high"
+[[process]]
+exe = "Warhammer40k.exe"
+priority_class = "high"
+[[process]]
+exe = "Diablo IV.exe"
+priority_class = "high"
+[[process]]
+exe = "Wow.exe"
+priority_class = "high"
+[[process]]
+exe = "LostArk.exe"
+priority_class = "high"
+[[process]]
+exe = "NewWorld.exe"
+priority_class = "high"
+[[process]]
+exe = "StarWarsOutlaws.exe"
+priority_class = "high"
+[[process]]
+exe = "ACMirage.exe"
+priority_class = "high"
+[[process]]
+exe = "ACShadows.exe"
+priority_class = "high"
+[[process]]
+exe = "FarCry6.exe"
+priority_class = "high"
+[[process]]
+exe = "WatchDogsLegion.exe"
+priority_class = "high"
+[[process]]
+exe = "GhostOfTsushima.exe"
+priority_class = "high"
+[[process]]
+exe = "Palworld.exe"
+priority_class = "high"
+[[process]]
+exe = "OnceHuman.exe"
+priority_class = "high"
+[[process]]
+exe = "Satisfactory-Win64-Shipping.exe"
+priority_class = "high"
+[[process]]
+exe = "LethalCompany.exe"
+priority_class = "high"
+[[process]]
+exe = "League of Legends.exe"
+priority_class = "high"
+[[process]]
+exe = "dota2.exe"
+priority_class = "high"
+[[process]]
+exe = "BaldursGate3.exe"
+priority_class = "high"
+[[process]]
+exe = "ManorLords.exe"
+priority_class = "high"
+[[process]]
+exe = "msfs.exe"
+priority_class = "high"
+[[process]]
+exe = "EuroTruck2.exe"
+priority_class = "high"
+[[process]]
+exe = "AmericanTruck.exe"
+priority_class = "high"
+[[process]]
+exe = "Minecraft.Windows10.exe"
+priority_class = "high"
+
+# Presets automaticos por jogo: quando um jogo na lista e detectado, seu
+# perfil e carregado ANTES da sequencia segura p/ anticheat. Jogos fora da
+# lista seguem o perfil global escolhido na UI. Comparacao por nome de exe
+# (minunculas). Sem regra que case, nada muda no motor.
+# Torneio = latencia/prioridade competitiva (FPS pvp, ranqueados; o
+# anticheat-safe poda automaticamente alavancas de risco nos online):
+[[process]]
+exe = "valorant-win64-shipping.exe"
+profile = "tournament"
+[[process]]
+exe = "valorant.exe"
+profile = "tournament"
+[[process]]
+exe = "cs2.exe"
+profile = "tournament"
+[[process]]
+exe = "csgo.exe"
+profile = "tournament"
+[[process]]
+exe = "counter-strike_global_offensive.exe"
+profile = "tournament"
+[[process]]
+exe = "r5apex.exe"
+profile = "tournament"
+[[process]]
+exe = "apexlegends.exe"
+profile = "tournament"
+[[process]]
+exe = "fortniteclient-win64-shipping.exe"
+profile = "tournament"
+[[process]]
+exe = "fortniteclient.exe"
+profile = "tournament"
+[[process]]
+exe = "escapefromtarkov.exe"
+profile = "tournament"
+[[process]]
+exe = "tarkov.exe"
+profile = "tournament"
+[[process]]
+exe = "eft.exe"
+profile = "tournament"
+[[process]]
+exe = "rainbow six siege.exe"
+profile = "tournament"
+[[process]]
+exe = "rainbowsix.exe"
+profile = "tournament"
+[[process]]
+exe = "overwatch.exe"
+profile = "tournament"
+[[process]]
+exe = "overwatch2.exe"
+profile = "tournament"
+[[process]]
+exe = "tslgame.exe"
+profile = "tournament"
+[[process]]
+exe = "pubg.exe"
+profile = "tournament"
+[[process]]
+exe = "warzone.exe"
+profile = "tournament"
+[[process]]
+exe = "cod.exe"
+profile = "tournament"
+[[process]]
+exe = "callofduty.exe"
+profile = "tournament"
+[[process]]
+exe = "modernwarfare.exe"
+profile = "tournament"
+[[process]]
+exe = "blackops6.exe"
+profile = "tournament"
+[[process]]
+exe = "league of legends.exe"
+profile = "tournament"
+[[process]]
+exe = "destiny2.exe"
+profile = "tournament"
+[[process]]
+exe = "rustclient.exe"
+profile = "tournament"
+[[process]]
+exe = "rust.exe"
+profile = "tournament"
+[[process]]
+exe = "rocketleague.exe"
+profile = "tournament"
+[[process]]
+exe = "deadlock.exe"
+profile = "tournament"
+[[process]]
+exe = "thefinals.exe"
+profile = "tournament"
+[[process]]
+exe = "the finals.exe"
+profile = "tournament"
+[[process]]
+exe = "thefinals_win64_shipping.exe"
+profile = "tournament"
+[[process]]
+exe = "marvelrivals.exe"
+profile = "tournament"
+[[process]]
+exe = "marvel rivals.exe"
+profile = "tournament"
+[[process]]
+exe = "deltaforce.exe"
+profile = "tournament"
+[[process]]
+exe = "delta force.exe"
+profile = "tournament"
+[[process]]
+exe = "hunt showdown.exe"
+profile = "tournament"
+[[process]]
+exe = "huntshowdown.exe"
+profile = "tournament"
+[[process]]
+exe = "insurgency.exe"
+profile = "tournament"
+[[process]]
+exe = "insurgencysandstorm.exe"
+profile = "tournament"
+[[process]]
+exe = "ready or not.exe"
+profile = "tournament"
+[[process]]
+exe = "readyornot.exe"
+profile = "tournament"
+[[process]]
+exe = "squad.exe"
+profile = "tournament"
+[[process]]
+exe = "hell let loose.exe"
+profile = "tournament"
+[[process]]
+exe = "hellletloose.exe"
+profile = "tournament"
+
+# Foco em segundo plano = mundo pesado/campanha/relaxante: entre cortes de
+# fundo e estabilidade, sem a bateria de latencia do torneio:
+[[process]]
+exe = "eldenring.exe"
+profile = "bg_only"
+[[process]]
+exe = "nightreign.exe"
+profile = "bg_only"
+[[process]]
+exe = "eldenringnightreign.exe"
+profile = "bg_only"
+[[process]]
+exe = "sekiro.exe"
+profile = "bg_only"
+[[process]]
+exe = "darksoulsiii.exe"
+profile = "bg_only"
+[[process]]
+exe = "rdr2.exe"
+profile = "bg_only"
+[[process]]
+exe = "reddead2.exe"
+profile = "bg_only"
+[[process]]
+exe = "starfield.exe"
+profile = "bg_only"
+[[process]]
+exe = "skyrimse.exe"
+profile = "bg_only"
+[[process]]
+exe = "skyrimvr.exe"
+profile = "bg_only"
+[[process]]
+exe = "fallout4.exe"
+profile = "bg_only"
+[[process]]
+exe = "baldursgate3.exe"
+profile = "bg_only"
+[[process]]
+exe = "bg3_dx11.exe"
+profile = "bg_only"
+[[process]]
+exe = "valheim.exe"
+profile = "bg_only"
+[[process]]
+exe = "stardewvalley.exe"
+profile = "bg_only"
+[[process]]
+exe = "monsterhunterworld.exe"
+profile = "bg_only"
+[[process]]
+exe = "monsterhunterwilds.exe"
+profile = "bg_only"
+[[process]]
+exe = "monster hunter wilds.exe"
+profile = "bg_only"
+[[process]]
+exe = "stalker2.exe"
+profile = "bg_only"
+[[process]]
+exe = "witcher3.exe"
+profile = "bg_only"
+[[process]]
+exe = "the witcher 3.exe"
+profile = "bg_only"
+[[process]]
+exe = "witcher.exe"
+profile = "bg_only"
+[[process]]
+exe = "cyberpunk2077.exe"
+profile = "bg_only"
+[[process]]
+exe = "cyberpunk2077_be.exe"
+profile = "bg_only"
+[[process]]
+exe = "pathofexile.exe"
+profile = "bg_only"
+[[process]]
+exe = "pathofexile_x64.exe"
+profile = "bg_only"
+[[process]]
+exe = "pathofexile2.exe"
+profile = "bg_only"
+[[process]]
+exe = "diablo iv.exe"
+profile = "bg_only"
+[[process]]
+exe = "diabloiv.exe"
+profile = "bg_only"
+[[process]]
+exe = "diablo4.exe"
+profile = "bg_only"
+[[process]]
+exe = "finalfantasyxiv.exe"
+profile = "bg_only"
+[[process]]
+exe = "ffxiv_dx11.exe"
+profile = "bg_only"
+[[process]]
+exe = "minecraft.exe"
+profile = "bg_only"
+[[process]]
+exe = "minecraftwindows.exe"
+profile = "bg_only"
+[[process]]
+exe = "minecraft.windows.exe"
+profile = "bg_only"
+[[process]]
+exe = "eurotrucksimulator2.exe"
+profile = "bg_only"
+[[process]]
+exe = "american truck simulator.exe"
+profile = "bg_only"
+[[process]]
+exe = "microsoftflight simulator.exe"
+profile = "bg_only"
+[[process]]
+exe = "flight simulator.exe"
+profile = "bg_only"
+[[process]]
+exe = "blackmythwukong.exe"
+profile = "bg_only"
+[[process]]
+exe = "black myth wukong.exe"
+profile = "bg_only"
+[[process]]
+exe = "spacemarine2.exe"
+profile = "bg_only"
+[[process]]
+exe = "kc2.exe"
+profile = "bg_only"
+[[process]]
+exe = "kingdomcome2.exe"
+profile = "bg_only"
+[[process]]
+exe = "ghostoftsushima.exe"
+profile = "bg_only"
+[[process]]
+exe = "ghost of tsushima.exe"
+profile = "bg_only"
+[[process]]
+exe = "tlou1.exe"
+profile = "bg_only"
+[[process]]
+exe = "the last of us part i.exe"
+profile = "bg_only"
+[[process]]
+exe = "hogwartslegacy.exe"
+profile = "bg_only"
+[[process]]
+exe = "hogwarts legacy.exe"
+profile = "bg_only"
+[[process]]
+exe = "palworld.exe"
+profile = "bg_only"
+[[process]]
+exe = "sonsoftheforest.exe"
+profile = "bg_only"
+[[process]]
+exe = "arkascended.exe"
+profile = "bg_only"
+[[process]]
+exe = "arksurvivalevolved.exe"
+profile = "bg_only"
+[[process]]
+exe = "helldivers2.exe"
+profile = "bg_only"
+[[process]]
+exe = "oncehuman.exe"
+profile = "bg_only"
+
+# Protected background processes (never throttled)
+[[process]]
+exe = "ApplicationFrameHost.exe"
+[[process]]
+exe = "brave.exe"
+[[process]]
+exe = "chrome.exe"
+[[process]]
+exe = "discord.exe"
+[[process]]
+exe = "Dropbox.exe"
+[[process]]
+exe = "EpicWebHelper.exe"
+[[process]]
+exe = "explorer.exe"
+[[process]]
+exe = "firefox.exe"
+[[process]]
+exe = "GameInputRedistService.exe"
+[[process]]
+exe = "GameInputSvc.exe"
+[[process]]
+exe = "gamingservices.exe"
+[[process]]
+exe = "gamingservicesnet.exe"
+[[process]]
+exe = "GoogleDriveFS.exe"
+[[process]]
+exe = "msedge.exe"
+[[process]]
+exe = "MsMpEng.exe"
+[[process]]
+exe = "OneDrive.exe"
+[[process]]
+exe = "SearchIndexer.exe"
+[[process]]
+exe = "SgrmBroker.exe"
+[[process]]
+exe = "Slack.exe"
+[[process]]
+exe = "steam.exe"
+[[process]]
+exe = "steamservice.exe"
+[[process]]
+exe = "steamwebhelper.exe"
+[[process]]
+exe = "svchost.exe"
+[[process]]
+exe = "Teams.exe"
+[[process]]
+exe = "TextInputHost.exe"
+[[process]]
+exe = "WUDFHost.exe"
+
+# Thread optimization rules (* = wildcard)
+[[threads]]
+thread_name = "GameThread"
+priority = "time_critical"
+[[threads]]
+thread_name = "RenderThread*"
+priority = "highest"
+[[threads]]
+thread_name = "RHIThread"
+priority = "highest"
+[[threads]]
+thread_name = "RHISubmissionThread"
+priority = "highest"
+[[threads]]
+thread_name = "RHIInterruptThread"
+priority = "highest"
+[[threads]]
+thread_name = "D3D11RenderThread*"
+priority = "highest"
+[[threads]]
+thread_name = "*AudioMixerRenderThread*"
+priority = "above_normal"
+[[threads]]
+thread_name = "WindowsRawInputThread"
+priority = "time_critical"
+[[threads]]
+thread_name = "SDLRawInput*"
+priority = "time_critical"
+[[threads]]
+thread_name = "*Async Shader Compile*"
+priority = "normal"
+[[threads]]
+thread_name = "*Background Worker*"
+action = "below_normal"
+[[threads]]
+thread_name = "*BackgroundThreadPool*"
+action = "below_normal"
+[[threads]]
+thread_name = "*CHTTP*ThreadPool*"
+action = "below_normal"
+[[threads]]
+thread_name = "AK*"
+action = "below_normal"
+[[threads]]
+thread_name = "IoService*"
+action = "below_normal"
+
+# Processos que o limitador de fundo NUNCA toca (editável na UI,
+# aba Jogos). Musica/chat/captura continuam normais durante o jogo.
+[[exclusion]]
+exe = "spotify.exe"
+[[exclusion]]
+exe = "discord.exe"
+[[exclusion]]
+exe = "obs64.exe"

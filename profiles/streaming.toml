@@ -1,0 +1,21 @@
+# Perfil: streaming — preserva OBS, Discord e captura enquanto reduz pressão de fundo.
+[config]
+poll_interval_ms = 1000
+
+[features]
+background_limiter = true
+eco_qos_background = true
+io_priority_background = true
+io_priority_game_high = true
+memory_priority_game_high = true
+mmcss_game = true
+page_priority_game = true
+game_tree_boost = false
+pause_services_gaming = false
+
+[[exclusion]]
+exe = "obs64.exe"
+[[exclusion]]
+exe = "streamlabs obs.exe"
+[[exclusion]]
+exe = "discord.exe"

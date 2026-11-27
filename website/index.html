@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KT Game Booster — otimização de jogos com números reais</title>
+<meta name="description" content="KT Game Booster 1.0 — detecção automática, 101 presets por jogo, timer 0.5 ms, CPU Sets, EcoQoS de fundo e bench de latência real. Painel completo, CLI, user-mode, sem driver, MIT.">
+<meta name="theme-color" content="#07070d">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KT Game Booster — otimização de jogos com números reais">
+<meta property="og:description" content="Detecta o jogo, aplica o perfil certo e devolve o Windows ao sair. Bench de latência real, modo seguro anticheat, 101 presets automáticos.">
+<meta property="og:site_name" content="KT Game Booster">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0a0f'/%3E%3Ctext x='32' y='43' font-family='Arial' font-weight='bold' font-size='28' fill='%239b7cff' text-anchor='middle'%3EKT%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fira+Code:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<div class="bg-fx" aria-hidden="true">
+  <canvas class="bg-canvas" id="bg-canvas"></canvas>
+  <span class="blob b1"></span>
+  <span class="blob b2"></span>
+  <span class="blob b3"></span>
+  <span class="grid-fx"></span>
+  <span class="noise"></span>
+</div>
+
+<header class="topbar" id="topo">
+  <div class="topbar-in">
+    <a class="brand" href="#topo">
+      <span class="brand-mark">KT</span>
+      <span class="brand-copy"><strong>KT GAME BOOSTER</strong><small>release pública 1.0</small></span>
+    </a>
+    <nav class="nav" id="navlinks" aria-label="Navegação principal">
+      <a href="#recursos">Recursos</a>
+      <a href="#painel">Painel</a>
+      <a href="#bench">Bench</a>
+      <a href="#presets">Presets</a>
+      <a href="#seguranca">Segurança</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn-primary btn-mag nav-cta" href="https://github.com/KT-TWEAKS/kt-game-booster-public/releases/latest" target="_blank" rel="noopener"><i class="fas fa-download" aria-hidden="true"></i> Baixar 1.0</a>
+    <button class="nav-burger" id="burger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navlinks-mobile"><i class="fas fa-bars" aria-hidden="true"></i></button>
+    <span class="topbar-progress" id="topbar-progress" aria-hidden="true"></span>
+  </div>
+  <div class="mobile-nav" id="navlinks-mobile">
+    <a href="#recursos">Recursos</a>
+    <a href="#painel">O painel</a>
+    <a href="#perfis">Perfis</a>
+    <a href="#fluxo">Fluxo</a>
+    <a href="#bench">Bench v2</a>
+    <a href="#presets">Presets por jogo</a>
+    <a href="#seguranca">Segurança</a>
+    <a href="#download">Download</a>
+    <a href="#faq">FAQ</a>
+  </div>
+</header>
+
+<main id="conteudo" tabindex="-1">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-scan" aria-hidden="true"></div>
+    <div class="shell hero-in">
+      <div class="hero-copy" data-re="up">
+        <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> KT TWEAKS · MOTOR EM MODO USUÁRIO · SEM DRIVER</p>
+        <h1>O Windows<br>focado no <em>seu jogo.</em></h1>
+        <p class="hero-lead">
+          Detecta o jogo, aplica o perfil certo e devolve tudo quando você sai.
+          Governador automático, presets por título, timer em 0,5&nbsp;ms e um bench
+          que mede latência de verdade — <b>número, não promessa</b>.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-big btn-mag" href="https://github.com/KT-TWEAKS/kt-game-booster-public/releases/latest" target="_blank" rel="noopener">Baixar a versão 1.0 <span class="arw">↗</span></a>
+          <a class="btn btn-ghost btn-big" href="#fluxo">Ver o fluxo <span class="arw">↓</span></a>
+        </div>
+        <div class="hero-trust">
+          <span><i class="fas fa-shield-halved" aria-hidden="true"></i> modo seguro anticheat</span>
+          <span><i class="fas fa-fingerprint" aria-hidden="true"></i> restauração por journal</span>
+          <span><i class="fas fa-anchor" aria-hidden="true"></i> licença MIT</span>
+        </div>
+      </div>
+      <div class="hero-visual" data-re="up" data-de="2">
+        <span class="orbit" aria-hidden="true"></span>
+        <div class="app-window" id="tilt-card" aria-label="Simulação do painel do app">
+          <span class="corner c1" aria-hidden="true"></span>
+          <span class="corner c2" aria-hidden="true"></span>
+          <span class="corner c3" aria-hidden="true"></span>
+          <span class="corner c4" aria-hidden="true"></span>
+          <div class="app-top">
+            <span class="app-brand"><b>KT</b> DASHBOARD</span>
+            <span class="app-status"><i class="dot" aria-hidden="true"></i><small id="app-status-txt">aguardando jogo</small></span>
+          </div>
+          <div class="app-bench">
+            <div class="app-metric">
+              <small>SCORE</small><b class="num" data-count="86" data-skip-count>0</b>
+              <span class="app-bar"><i id="score-bar-el" style="width:0%"></i></span>
+            </div>
+            <div class="app-metric"><small>TIMER</small><b class="num">0.999<i>ms</i></b></div>
+            <div class="app-metric"><small>I/O P95</small><b class="num">177<i>µs</i></b></div>
+          </div>
+          <div class="app-rows">
+            <div class="app-row"><span>preset automático</span><b class="v">torneio</b></div>
+            <div class="app-row"><span>prioridade · cpu sets</span><b class="v">HIGH · P-cores</b></div>
+            <div class="app-row"><span>painéis em modo jogo</span><b class="v">bandeja</b></div>
+          </div>
+          <div class="app-term"><span class="term-prompt">gt></span> <span id="term-line">lendo o sistema…</span></div>
+        </div>
+        <div class="live-card"><i class="fas fa-circle-check" aria-hidden="true"></i><span><small>STATUS MEDIDO</small><b>score 86 · sessão real</b></span></div>
+      </div>
+    </div>
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track" id="marquee-track"></div>
+    </div>
+  </section>
+
+  <!-- ============ SINAIS ============ -->
+  <section class="signal" aria-label="Resumo técnico">
+    <div class="shell signal-in" data-re="up">
+      <div><b class="num" data-count="101">0</b><span>regras de preset no TOML</span></div>
+      <div><b class="num" data-count="05" data-plain="0.5 ms">0</b><span>timer real do sistema</span></div>
+      <div><b class="num" data-count="0">0</b><span>telemetria e contas</span></div>
+      <div><b class="num" data-count="3">0</b><span>perfis prontos + hotkeys</span></div>
+    </div>
+  </section>
+
+  <!-- ============ RECURSOS ============ -->
+  <section class="sec" id="recursos">
+    <div class="shell">
+      <div class="sec-head" data-re="up">
+        <p class="kicker">RECURSOS</p>
+        <h2>Cada lever é uma decisão documentada.</h2>
+        <p class="sec-sub">
+          Nada de caixa-preta: tudo é código aberto, aplicado em ordem verificada
+          e desfeito por journal de snapshots no encerramento.
+        </p>
+      </div>
+      <div class="bento">
+        <article class="bc bc-w3 spot card-hov" data-re="up">
+          <span class="bc-icon"><i class="fas fa-crosshairs" aria-hidden="true"></i></span>
+          <h3>Detecção automática de jogos</h3>
+          <p>Mais de 260 executáveis embutidos com níveis de confiança: nome, caminho de loja (Steam, Epic, Riot, GOG, Xbox, Ubisoft, EA, Battle.net), launcher-chain e validação de manifest no EGS. Spotify, Discord e OBS nunca são tocados.</p>
+        </article>
+        <article class="bc bc-w3 spot card-hov" data-re="up" data-de="1">
+          <span class="bc-icon"><i class="fas fa-sliders" aria-hidden="true"></i></span>
+          <h3>Presets por título</h3>
+          <p>61 títulos (101 regras de EXE) já entram configurados: competitivos herdam o perfil <b>torneio</b> (latência máxima) e títulos de mundo/campanha o <b>segundo plano</b> — tudo antes da trava de anticheat.</p>
+        </article>
+        <article class="bc bc-w2 spot card-hov" data-re="up" data-de="2">
+          <span class="bc-icon"><i class="fas fa-gauge-high" aria-hidden="true"></i></span>
+          <h3>Governor automático</h3>
+          <p>Otimização por tick de 1 segundo: prioridade HIGH, I/O alto, memory priority e prioridade de página para o jogo. Ao encerrar, o motor devolve prioridade, afinidade, EcoQoS, serviços e shell.</p>
+        </article>
+        <article class="bc bc-w2 spot card-hov" data-re="up">
+          <span class="bc-icon"><i class="fas fa-clock" aria-hidden="true"></i></span>
+          <h3>Timer 0.5 ms</h3>
+          <p>Resolve o timer do Windows durante o jogo via <b>NtSetSystemInformation</b> com privilégio verificável. O padrão do Windows é ~15.6 ms; o card TIMER do Bench mostra o valor real entregue.</p>
+        </article>
+        <article class="bc bc-w2 spot card-hov" data-re="up" data-de="1">
+          <span class="bc-icon"><i class="fas fa-microchip" aria-hidden="true"></i></span>
+          <h3>CPU Sets de P-cores</h3>
+          <p>Em máquinas híbridas, o jogo é fixado nos núcleos de performance via API oficial de CPU Sets. Em CPUs convencionais, o conjunto de núcleos fica configurável no <b>gamemode.toml</b>.</p>
+        </article>
+        <article class="bc bc-w3 spot card-hov" data-re="up" data-de="2">
+          <span class="bc-icon"><i class="fas fa-feather" aria-hidden="true"></i></span>
+          <h3>Fundo em EcoQoS</h3>
+          <p>Apps de fundo caem no modo de eficiência de CPU e I/O, com trilha de rede no regime de economia, enquanto o jogo roda. Limitação suave por CPU com lista de exceção editável na aba Jogos.</p>
+        </article>
+        <article class="bc bc-w3 spot card-hov" data-re="up">
+          <span class="bc-icon"><i class="fas fa-display" aria-hidden="true"></i></span>
+          <h3>Modo jogo no painel</h3>
+          <p>O painel deve custar zero para a sessão: quando um jogo é detectado, animações e sombras off, 20 fps de teto e opção de ir para a bandeja. Balão de aviso e retorno automático pelo ícone.</p>
+        </article>
+        <article class="bc bc-w2 spot card-hov" data-re="up" data-de="1">
+          <span class="bc-icon"><i class="fas fa-plug-circle-bolt" aria-hidden="true"></i></span>
+          <h3>Planos de energia gaming</h3>
+          <p>Par de planos dedicado: um para a sessão de jogo e outro restaurado na saída. GUIDs configuráveis no TOML, restauração coberta pelo journal.</p>
+        </article>
+        <article class="bc bc-w2 spot card-hov" data-re="up" data-de="2">
+          <span class="bc-icon"><i class="fas fa-arrows-rotate" aria-hidden="true"></i></span>
+          <h3>Updater com SHA-256</h3>
+          <p>O app baixa o release oficial, valida o hash publicado antes de aplicar, preserva config e perfis e reinicia limpo. Nada fica preso no sistema.</p>
+        </article>
+        <article class="bc bc-w2 spot card-hov" data-re="up">
+          <span class="bc-icon"><i class="fas fa-chart-line" aria-hidden="true"></i></span>
+          <h3>Bench de latência v2</h3>
+          <p>Score composto, timer real via ntdll, 6,6 milhões de amostras de scheduler e leitura 4KB sem cache no disco. Se uma medição falha, o peso renormaliza e o card mostra honestamente <b>—</b>.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ O PAINEL ============ -->
+  <section class="sec sec-dark" id="painel">
+    <div class="shell">
+      <div class="sec-head" data-re="up">
+        <p class="kicker">O PAINEL</p>
+        <h2>Tudo que o motor faz<br>aparece na tela.</h2>
+        <p class="sec-sub">Cinco abas, nenhuma enfeite: cada uma mostra o estado real do que está sendo aplicado na sessão — inclusive pra você desconfiar e conferir.</p>
+      </div>
+      <div class="panel-grid">
+        <div class="pd-window" data-re="up" data-de="1" aria-hidden="true">
+          <div class="pd-rail">
+            <span class="pd-brand"><b>KT</b> v1.0</span>
+            <span class="pd-tab active"><i class="fas fa-gauge" aria-hidden="true"></i>Visão geral</span>
+            <span class="pd-tab"><i class="fas fa-table-list" aria-hidden="true"></i>Processos</span>
+            <span class="pd-tab"><i class="fas fa-sliders" aria-hidden="true"></i>Otimizações</span>
+            <span class="pd-tab"><i class="fas fa-gamepad" aria-hidden="true"></i>Jogos</span>
+            <span class="pd-tab"><i class="fas fa-terminal" aria-hidden="true"></i>Log</span>
+          </div>
+          <div class="pd-main">
+            <div class="pd-cards">
+              <div class="pd-card"><small>ALVO</small><b>valorant-win64…</b></div>
+              <div class="pd-card"><small>LIMITADOS</small><b>18</b></div>
+              <div class="pd-card"><small>SUSPENSAS</small><b>7</b></div>
+              <div class="pd-card"><small>RAM</small><b>11.4 GB</b></div>
+            </div>
+            <div class="pd-table">
+              <div class="pd-tr pd-th"><span>PROCESSO</span><span>CPU%</span><span>PRIO</span><span>ESTADO</span></div>
+              <div class="pd-tr pd-game"><span>valorant-win64-shipping</span><span class="pd-up">31.2</span><span>HIGH</span><span class="pd-ok">otimizado</span></div>
+              <div class="pd-tr"><span>chrome.exe</span><span>4.1</span><span>eco</span><span>segundo plano</span></div>
+              <div class="pd-tr"><span>spotify.exe</span><span>1.2</span><span>normal</span><span>intocado</span></div>
+              <div class="pd-tr"><span>obs64.exe</span><span>2.8</span><span>normal</span><span>exceção ativa</span></div>
+            </div>
+            <div class="pd-foot"><span>sessões 12 · tempo em jogo 84 h · uptime 3 d</span><span>tick 1 s</span></div>
+          </div>
+        </div>
+        <div class="panel-points" data-re="up" data-de="2">
+          <div class="pp"><b>Visão Geral</b><p>cards de estado: alvo da sessão, processos limitados, threads suspensas, eventos ETW e RAM — atualizados a cada tick.</p></div>
+          <div class="pp"><b>Processos</b><p>tabela ordenada por CPU com sparkline na coluna do jogo; o alvo fica destacado e cada linha mostra prioridade e afinidade reais.</p></div>
+          <div class="pp"><b>Otimizações</b><p>switches aplicados em tempo real e seletor de perfil — as setas alternam entre <span class="kbd">gamemode.toml</span> e <span class="kbd">profiles/*.toml</span>.</p></div>
+          <div class="pp"><b>Jogos</b><p>lista de títulos com regras, exceções e o botão <b>Testar jogo</b>, que força o .exe aberto como alvo no próximo ciclo de detecção.</p></div>
+          <div class="pp"><b>Log</b><p>rolável e filtrável: TODOS / GAME / CORE / POWER / CONFIG / GUI. O que apareceu no log é o que aconteceu de verdade.</p></div>
+          <div class="pp-shortcuts">
+            <span class="kbd">ESPAÇO</span> pausa/retoma
+            <span class="kbd">CTRL+ALT+G</span> modo torneio
+            <span class="kbd">T</span> tema claro/escuro
+          </div>
+          <p class="pp-note">Na bandeja: <b>Abrir / Pausar / Restaurar / Limpar RAM / Sair</b>. O rodapé guarda sessões, tempo em jogo e uptime — relatório de economia, não estimativa.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PERFIS ============ -->
+  <section class="sec" id="perfis">
+    <div class="shell">
+      <div class="sec-head" data-re="up">
+        <p class="kicker">PERFIS</p>
+        <h2>Três perfis prontos.<br>Um arquivo aberto.</h2>
+        <p class="sec-sub">Troque no seletor da aba Otimizações, por hotkey ou deixe a detecção escolher pelo título. O perfil base é o <b>gamemode.toml</b> — texto puro, comentado e editável.</p>
+      </div>
+      <div class="profiles-grid">
+        <div class="profile-card spot" data-re="up">
+          <span class="p-chip">profiles/tournament.toml</span>
+          <h3>Torneio</h3>
+          <p>Prioridade e timer no limite, fundo contido. Pra competitivo onde cada ms de resposta conta: Valorant, CS2, Fortnite, LoL, Apex.</p>
+          <span class="p-key"><i class="fas fa-keyboard" aria-hidden="true"></i> CTRL+ALT+G liga na hora</span>
+        </div>
+        <div class="profile-card spot" data-re="up" data-de="1">
+          <span class="p-chip">profiles/bg_only.toml</span>
+          <h3>Segundo plano</h3>
+          <p>Pra jogo de mundo e campanha que sofre com apps de fundo: limpa a traseira sem radicalizar no jogo — Elden Ring, Cyberpunk, Baldur's Gate 3.</p>
+          <span class="p-key"><i class="fas fa-moon" aria-hidden="true"></i> entra sozinho por regra de título</span>
+        </div>
+        <div class="profile-card spot" data-re="up" data-de="2">
+          <span class="p-chip">profiles/streaming.toml</span>
+          <h3>Streaming</h3>
+          <p>Detecta OBS ou Streamlabs abertos e abre espaço pro encoder: mantém o jogo de pé e corta o resto — sem brigar com quem transmite.</p>
+          <span class="p-key"><i class="fas fa-video" aria-hidden="true"></i> fallback automático da sessão</span>
+        </div>
+      </div>
+      <p class="sec-note" data-re="up">Regra por título tem prioridade sobre tudo. Sem regra, vale o perfil global escolhido no seletor — e sem seletor, o <b>gamemode.toml</b> decide. Tudo em texto aberto no disco.</p>
+    </div>
+  </section>
+
+  <!-- ============ FLUXO ============ -->
+  <section class="sec sec-dark" id="fluxo">
+    <div class="shell">
+      <div class="sec-head" data-re="up">
+        <p class="kicker">FLUXO DO MOTOR</p>
+        <h2>Leia antes. <em>Confirme depois.</em></h2>
+        <p class="sec-sub">Quatro etapas, uma por sessão de jogo, todas com caminho de volta.</p>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-steps" data-re="up" role="tablist" aria-label="etapas do motor">
+          <button class="flow-step is-active" type="button" role="tab" aria-selected="true" data-step="0">
+            <small>ETAPA 01</small><strong>Detectar</strong><em>nome, caminho, confiança, launcher-chain e manifest</em>
+            <i class="fas fa-crosshairs" aria-hidden="true"></i>
+          </button>
+          <button class="flow-step" type="button" role="tab" aria-selected="false" data-step="1">
+            <small>ETAPA 02</small><strong>Aplicar</strong><em>preset + levers em ordem, anticheat-safe quando convém</em>
+            <i class="fas fa-bolt" aria-hidden="true"></i>
+          </button>
+          <button class="flow-step" type="button" role="tab" aria-selected="false" data-step="2">
+            <small>ETAPA 03</small><strong>Monitorar</strong><em>tick de 1 s, FPS monitor ETW, log confrontado no painel</em>
+            <i class="fas fa-wave-square" aria-hidden="true"></i>
+          </button>
+          <button class="flow-step" type="button" role="tab" aria-selected="false" data-step="3">
+            <small>ETAPA 04</small><strong>Restaurar</strong><em>journal desfeito em ordem inversa — até em Ctrl+C</em>
+            <i class="fas fa-rotate-left" aria-hidden="true"></i>
+          </button>
+          <span class="flow-rail" aria-hidden="true"><i id="flow-rail-fill"></i></span>
+        </div>
+        <div class="flow-console" data-re="up" data-de="1">
+          <div class="console-top">
+            <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="console-title">KT ENGINE · FLUXO AO VIVO</span>
+            <b class="console-ok"><i class="fas fa-circle-check" aria-hidden="true"></i> PRÓXIMO</b>
+          </div>
+          <div class="console-head">
+            <small id="flow-status">ETAPA 01 / DETECÇÃO</small>
+            <strong id="flow-headline">Nenhuma mudança começa sem contexto.</strong>
+            <p id="flow-desc">O motor classifica o processo antes de tocar em qualquer configuração.</p>
+          </div>
+          <div class="console-term">
+            <div class="term-row"><span class="p">gt></span> <span class="t" id="cterm0"></span></div>
+            <div class="term-row"><span class="p">gt></span> <span class="t" id="cterm1"></span></div>
+            <div class="term-row"><span class="p">gt></span> <span class="t" id="cterm2"></span></div>
+          </div>
+          <div class="console-foot"><span><i class="fas fa-lock" aria-hidden="true"></i> execução local</span><span><i class="fas fa-link" aria-hidden="true"></i> ipc validado</span><span><i class="fas fa-rotate-left" aria-hidden="true"></i> rollback sempre</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BENCH ============ -->
+  <section class="sec" id="bench">
+    <div class="shell">
+      <div class="sec-head" data-re="up">
+        <p class="kicker">BENCH DE LATÊNCIA</p>
+        <h2>Cinco números reais.<br>Zero cosplay.</h2>
+        <p class="sec-sub">Medidos na sua máquina em tempo real. Rode antes e depois de ativar e compare — o app pontua por curva de referência e mostra a mediana, o p95 e o pico sem esconder nada.</p>
+      </div>
+      <div class="bench-top">
+        <div class="bench-hi spot" data-re="up">
+          <div class="bench-gauge">
+            <svg viewBox="0 0 120 120" width="132" height="132">
+              <circle class="gg-bg" cx="60" cy="60" r="52"/>
+              <circle class="gg-fg" id="gauge-fg" cx="60" cy="60" r="52" transform="rotate(-90 60 60)"/>
+            </svg>
+            <b class="num gg-num" data-count="86" data-skip-count>0</b>
+          </div>
+          <div class="gauge-meta">
+            <small>SCORE</small>
+            <span>composto 0–100 · sessão real de validação</span>
+            <div class="b-bar"><i id="bench-bar" style="width:0%"></i></div>
+            <em>pesos 35/35/30 timer·sched·i/o</em>
+          </div>
+        </div>
+        <div class="bench-curve spot" data-re="up" data-de="1">
+          <svg class="curve" viewBox="0 0 560 180" preserveAspectRatio="none" aria-hidden="true">
+            <path class="c-area" d="M0,150 C60,148 90,140 130,120 C170,100 200,96 240,84 C290,68 330,60 380,44 C430,30 500,22 560,18 L560,180 L0,180 Z"/>
+            <path class="c-base" d="M0,122 L560,92"/>
+            <path class="c-score" pathLength="1" d="M0,150 C60,148 90,140 130,120 C170,100 200,96 240,84 C290,68 330,60 380,44 C430,30 500,22 560,18"/>
+          </svg>
+          <div class="curve-legend">
+            <span><i class="dot-base" aria-hidden="true"></i> linha de referência</span>
+            <span><i class="dot-kt" aria-hidden="true"></i> sessão com os levers aplicados</span>
+          </div>
+          <small class="curve-note">curva ilustrativa · os seus números aparecem na aba Bench do app</small>
+        </div>
+      </div>
+      <div class="bench-grid">
+        <div class="bench-card spot" data-re="up" data-de="1"><small>TIMER</small><b class="num">0.999<i>ms</i></b><span>resolução entregue (NtQueryTimerResolution)</span></div>
+        <div class="bench-card spot" data-re="up" data-de="2"><small>SCHED P95</small><b class="num">0.00<i>ms</i></b><span>P95 de milhões de amostras de agendamento por sessão</span></div>
+        <div class="bench-card spot" data-re="up" data-de="3"><small>I/O P95</small><b class="num">177<i>µs</i></b><span>leitura 4KB sem cache (FILE_FLAG_NO_BUFFERING)</span></div>
+      </div>
+      <div class="bench-pico spot" data-re="up" data-de="2">
+        <small>PICO</small>
+        <div class="pico-des">
+          <b class="num danger">13.76<i>ms</i></b>
+          <span>pior caso de scheduling na sessão — mostrado sempre,<br>mesmo quando menos conveniente. DPC de driver externo não é do app.</span>
+        </div>
+      </div>
+      <div class="bench-legend">
+        <div data-re="up"><h4>Como o score é construído</h4><p>Timer vale <b>35%</b>, scheduler <b>35%</b> e I/O <b>30%</b>. Cada parte recebe nota por curva (0.5 ms ≈ nota 100; sched ≤ 50 µs ≈ 96; I/O NVMe 30 µs ≈ 96).</p></div>
+        <div data-re="up" data-de="1"><h4>Como ler</h4><p><b class="g">≥ 85 excelente</b> — resposta de input no nível dos apps de referência.<br><b class="g">70–84 bom</b> — saudável, ganho só com tweaks finos.<br><b class="o">50–69 média</b> — timer + plano resolvem.<br><b class="r">&lt; 50 sensível</b> — algo drena o sistema.</p></div>
+        <div data-re="up" data-de="2"><h4>Números acima</h4><p>Eles vêm de uma sessão real de validação. Os seus aparecem na aba <b>Bench</b> do app — a mesma computação, rodando do seu lado, sem disfarce.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LEVERS ============ -->
+  <section class="sec sec-dark" id="levers">
+    <div class="shell">
+      <div class="sec-head" data-re="up">
+        <p class="kicker">LEVERS</p>
+        <h2>O que exatamente é aplicado.</h2>
+        <p class="sec-sub">Cada lever é uma API pública do Windows chamada em ordem definida — e registrada no journal para ser desfeita na ordem inversa. Nada de kernel, nada de patch.</p>
+      </div>
+      <div class="levers-wrap spot" data-re="up">
+        <table class="levers-table">
+          <thead>
+            <tr><th>LEVER</th><th>O QUE FAZ</th><th>BASE</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>Prioridade do processo</b></td><td>o jogo sobe para HIGH; o fundo é administrado separadamente</td><td class="mono">SetPriorityClass</td></tr>
+            <tr><td><b>CPU Sets</b></td><td>em CPU híbrida, o jogo fica fixo nos P-cores</td><td class="mono">SetProcessDefaultCpuSets</td></tr>
+            <tr><td><b>Timer</b></td><td>0,5–1,0 ms durante a sessão (o padrão é ~15,6 ms)</td><td class="mono">NtSetSystemInformation</td></tr>
+            <tr><td><b>I/O e memória</b></td><td>prioridade alta de disco e memória para o jogo</td><td class="mono">SetProcessInformation</td></tr>
+            <tr><td><b>EcoQoS</b></td><td>apps de fundo entram no modo eficiência da CPU</td><td class="mono">PROCESS_POWER_THROTTLING</td></tr>
+            <tr><td><b>Plano de energia</b></td><td>plano gaming na sessão, plano original na saída</td><td class="mono">PowerSetActiveScheme</td></tr>
+            <tr><td><b>Serviços</b></td><td>não essenciais suspensos, com lista de exceção editável</td><td class="mono">SCM · user-mode</td></tr>
+            <tr><td><b>Modo jogo do painel</b></td><td>20 fps de teto, sem sombras nem animação, bandeja opcional</td><td class="mono">interno</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sec-note" data-re="up">Chaves de risco ficam <b>OFF por padrão</b> no TOML e só ligam se você ligar. Suspensão de serviços e game-tree são exemplos — cada uma tem comentário no próprio arquivo.</p>
+    </div>
+  </section>
+
+  <!-- ============ PRESETS ============ -->
+  <section class="sec" id="presets">
+    <div class="shell">
+      <div class="sec-head" data-re="up">
+        <p class="kicker">61 TÍTULOS CONFIGURADOS</p>
+        <h2>61 títulos já saem configurados.</h2>
+        <p class="sec-sub">Cada preset é uma regra <b>[[process]]</b> no gamemode.toml: <b>101 regras de EXE</b> cobrem 61 títulos (variantes e alias têm regra própria). Competitivos entram com <b>torneio</b>, jogos de mundo/campanha com <b>segundo plano</b> — antes da trava de anticheat. Títulos fora da lista seguem o perfil global escolhido por você.</p>
+      </div>
+      <div class="preset-tools" data-re="up">
+        <label class="preset-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i><span class="sr-only">Buscar jogo</span><input id="preset-search" type="search" placeholder="Buscar jogo… (ou pressione /)" autocomplete="off"></label>
+        <div class="preset-filters" role="group" aria-label="Filtrar por categoria">
+          <button class="filter active" type="button" data-filter="all" aria-pressed="true">Todos</button>
+          <button class="filter" type="button" data-filter="torneio" aria-pressed="false">Torneio</button>
+          <button class="filter" type="button" data-filter="bg" aria-pressed="false">Segundo plano</button>
+        </div>
+        <span class="preset-count" id="preset-count" aria-live="polite">61 títulos visíveis</span>
+      </div>
+      <div class="preset-nores" id="preset-nores" hidden><strong>Nada encontrado.</strong><span>Procure pelo nome exato ou limpe o filtro.</span></div>
+      <div class="preset-grid" id="preset-grid" data-re="up"></div>
+      <p class="sec-note" data-re="up">Quer outro título? Adicione um <b>[[game]]</b> pela aba Jogos ou escreva o caminho completo em <b>[[process]]</b> — a engine casa pelo EXE em minúsculas, igual à detecção interna.</p>
+    </div>
+  </section>
+
+  <!-- ============ SEGURANÇA ============ -->
+  <section class="sec sec-dark" id="seguranca">
+    <div class="shell">
+      <div class="sec-head" data-re="up">
+        <p class="kicker">SEGURANÇA / ANTICHEAT</p>
+        <h2>Feito para não te custar um ban.</h2>
+        <p class="sec-sub">Tudo que pode flagar anticheat é opt-in, documentado e reversível. Em sessões AC, o modo seguro derruba limitadores e usa apenas APIs user-mode comuns.</p>
+      </div>
+      <div class="safe-grid">
+        <div class="safe-col ok spot" data-re="up">
+          <h4><i class="fas fa-check" aria-hidden="true"></i> SEMPRE aplicado com segurança</h4>
+          <ul>
+            <li><b>Sequência AC-safe</b>: jogos com anticheat de kernel sobem os levers em ordem compatível (prioridade HIGH mantida, suspensões/serviços e limiter desligados).</li>
+            <li><b>Snapshot journal</b>: cada mudança é registrada e desfeita na ordem inversa — inclusive em Ctrl+C ou crash.</li>
+            <li><b>User-mode</b>: sem driver de kernel, sem serviço assinado próprio, sem patch de memória de terceiros.</li>
+            <li><b>Chaves de risco</b> ficam OFF por padrão no TOML e ligadas só por você.</li>
+          </ul>
+        </div>
+        <div class="safe-col no spot" data-re="up" data-de="1">
+          <h4><i class="fas fa-xmark" aria-hidden="true"></i> NUNCA é feito</h4>
+          <ul>
+            <li>Não mata <b>explorer</b>, <b>dwm</b> ou <b>winlogon</b> — quebra de sessão e flag conhecida.</li>
+            <li>Não re-injeta input (SendInput) — disparo de ban, não otimização.</li>
+            <li>Não instala serviço, driver ou tarefa oculta para "persistir boosts".</li>
+            <li>Não envia telemetria — export JSON/CSV é manual e sai do seu disco.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CLI ============ -->
+  <section class="sec" id="cli">
+    <div class="shell">
+      <div class="sec-head" data-re="up">
+        <p class="kicker">CLI</p>
+        <h2>Prefere terminal?<br>O mesmo EXE.</h2>
+        <p class="sec-sub">A GUI é opcional: o binário carrega um modo console completo, com as mesmas garantias de restauração.</p>
+      </div>
+      <div class="cli-wrap" data-re="up" data-de="1">
+        <pre class="cli-block"><code>KTGameBooster.exe <span class="c-flag">--daemon</span>            <span class="c-cmt">rem roda sem a tabela periódica</span>
+KTGameBooster.exe <span class="c-flag">--dry-run</span>           <span class="c-cmt">rem mostra o que faria, sem aplicar</span>
+KTGameBooster.exe <span class="c-flag">--list-games</span>        <span class="c-cmt">rem lista os títulos conhecidos</span>
+KTGameBooster.exe <span class="c-flag">--list-threads</span>      <span class="c-cmt">rem threads do jogo detectado</span>
+KTGameBooster.exe <span class="c-flag">--tournament</span>        <span class="c-cmt">rem perfil extremo da sessão</span>
+KTGameBooster.exe <span class="c-flag">--no-eco-qos --no-io-priority</span>  <span class="c-cmt">rem desliga levers específicos</span></code></pre>
+      </div>
+      <p class="sec-note" data-re="up"><b>Ctrl+C</b> restaura tudo e sai limpo — o journal não depende de janela aberta.</p>
+    </div>
+  </section>
+
+  <!-- ============ DOWNLOAD ============ -->
+  <section class="sec sec-dark" id="download">
+    <div class="shell">
+      <div class="sec-head" data-re="up">
+        <p class="kicker">DOWNLOAD</p>
+        <h2>Um executável. Tudo embutido.</h2>
+        <p class="sec-sub">Motor, config e perfis dentro de um EXE de ~500 KB. Na primeira execução o app extrai o seu diretório em <b>%LOCALAPPDATA%\KT Game Booster</b> e começa por lá.</p>
+      </div>
+      <div class="dl-grid">
+        <a class="dl-card spot card-hov" data-re="up" href="https://github.com/KT-TWEAKS/kt-game-booster-public/releases/latest" target="_blank" rel="noopener">
+          <i class="fas fa-gears dl-ico" aria-hidden="true"></i>
+          <b>EXE único</b><span>portátil, auto-extract — recomendado</span><i>KTGameBooster-v1.0-win-x64.exe</i><em>+ .sha256 publicado</em>
+        </a>
+        <a class="dl-card spot card-hov" data-re="up" data-de="1" href="https://github.com/KT-TWEAKS/kt-game-booster-public/releases/latest" target="_blank" rel="noopener">
+          <i class="fas fa-box-open dl-ico" aria-hidden="true"></i>
+          <b>Instalador</b><span>atalhos e desinstalação do Windows</span><i>KTGameBooster-v1.0-Setup.exe</i><em>+ .sha256</em>
+        </a>
+        <a class="dl-card spot card-hov" data-re="up" data-de="2" href="https://github.com/KT-TWEAKS/kt-game-booster-public/releases/latest" target="_blank" rel="noopener">
+          <i class="fas fa-file-zipper dl-ico" aria-hidden="true"></i>
+          <b>ZIP portátil</b><span>ideal para testar em máquina limpa</span><i>KTGameBooster-v1.0-win-x64.zip</i><em>+ .sha256</em>
+        </a>
+      </div>
+      <div class="req-grid">
+        <div class="req-col" data-re="up">
+          <h4>Requisitos</h4>
+          <ul>
+            <li>Windows 10 (build 19045+) ou Windows 11, x64</li>
+            <li>Privilégio de administrador — a UI pede uma vez</li>
+            <li>~500 KB, sem runtime adicional</li>
+            <li>Antivirus: assinatura de instalador via NSIS; hash SHA-256 publicado em cada release</li>
+          </ul>
+        </div>
+        <div class="req-col" data-re="up" data-de="1">
+          <h4>Instalação e saída</h4>
+          <ol>
+            <li>Baixe o EXE único (ou o instalador) e confira o <b>.sha256</b>.</li>
+            <li>Execute como administrador.</li>
+            <li>Abra o jogo — detecção, preset e resto são automáticos.</li>
+            <li>Para remover: feche o app (restauração imediata) e apague a pasta, ou desinstale pelo Windows. Se ligou o auto-início, a chave HKCU sai junto.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="dl-note" data-re="up">
+        <p><i class="fas fa-circle-info" aria-hidden="true"></i> Verifique a origem do arquivo e confira o <b>SHA-256</b> antes de executar. O app nunca pede conta, login ou rede — a única conexão é o updater opcional de release.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="sec" id="faq">
+    <div class="shell">
+      <div class="sec-head" data-re="up">
+        <p class="kicker">FAQ</p>
+        <h2>Perguntas que você realmente faz.</h2>
+      </div>
+      <div class="faq-list" data-re="up">
+        <div class="faq">
+          <button class="faq-q" type="button" aria-expanded="false">Esse app pode me dar ban no Valorant, CS2, Fortnite?<i class="fas fa-plus" aria-hidden="true"></i></button>
+          <div class="faq-a"><div class="faq-a-in">
+            <p>Regra nº 1 do projeto. O modo seguro anticheat derruba limitadores e suspensões, usa só APIs user-mode comuns (prioridade, CPU Sets, NtSetTimerResolution) e restaura tudo no encerramento. Sem injeção de input, sem matar explorer, sem driver. Se algo incomoda, rode o modo seguro e acompanhe o log em tempo real.</p>
+          </div></div>
+        </div>
+        <div class="faq">
+          <button class="faq-q" type="button" aria-expanded="false">O que são os presets automáticos por jogo?<i class="fas fa-plus" aria-hidden="true"></i></button>
+          <div class="faq-a"><div class="faq-a-in">
+            <p>61 títulos distintos (101 regras de EXE contando variantes e alias) já carregam um perfil ao serem detectados: competitivos (Valorant, CS2, Apex, LoL…) entram com <b>torneio</b> e jogos de mundo/campanha (Elden Ring, Cyberpunk, Baldur's Gate 3…) com <b>segundo plano</b>. A aplicação acontece antes da trava AC-safe, dentro do <b>gamemode.toml</b> aberto e editável.</p>
+          </div></div>
+        </div>
+        <div class="faq">
+          <button class="faq-q" type="button" aria-expanded="false">Preciso configurar algo antes de jogar?<i class="fas fa-plus" aria-hidden="true"></i></button>
+          <div class="faq-a"><div class="faq-a-in">
+            <p>Não. Os 61 títulos já saem com preset e o resto usa o perfil global. Quem quiser calibrar abre o <b>gamemode.toml</b> — as chaves têm comentário no próprio arquivo, e nada exige reinício: o seletor de perfil e os switches da aba Otimizações aplicam na hora.</p>
+          </div></div>
+        </div>
+        <div class="faq">
+          <button class="faq-q" type="button" aria-expanded="false">Como vejo se funcionou?<i class="fas fa-plus" aria-hidden="true"></i></button>
+          <div class="faq-a"><div class="faq-a-in">
+            <p>Corra o <b>Bench</b> antes, aplique e rode de novo. O timer deve aproximar de 0.5/1.0 ms, o scheduler P95 estabiliza perto de zero e o I/O P95 acompanha seu SSD. A diferença aparece nos números, não em barra de "boost".</p>
+          </div></div>
+        </div>
+        <div class="faq">
+          <button class="faq-q" type="button" aria-expanded="false">O app consome recursos enquanto eu jogo?<i class="fas fa-plus" aria-hidden="true"></i></button>
+          <div class="faq-a"><div class="faq-a-in">
+            <p>O painel entra em <b>modo jogo</b> sozinho: 20 fps de teto, sem animação nem sombra, e pode sumir para a bandeja. O governor trabalha em tick de 1 s. O custo é o que o próprio Bench mede — rodando, não estimado.</p>
+          </div></div>
+        </div>
+        <div class="faq">
+          <button class="faq-q" type="button" aria-expanded="false">Preciso deixar o app aberto?<i class="fas fa-plus" aria-hidden="true"></i></button>
+          <div class="faq-a"><div class="faq-a-in">
+            <p>Não — deixe na bandeja. O governor acompanha a sessão por tick e o modo jogo economiza o painel automaticamente. A otimização não depende de janela aberta.</p>
+          </div></div>
+        </div>
+        <div class="faq">
+          <button class="faq-q" type="button" aria-expanded="false">Precisa de administrador sempre?<i class="fas fa-plus" aria-hidden="true"></i></button>
+          <div class="faq-a"><div class="faq-a-in">
+            <p>Para a maioria dos levers sim — prioridade, CPU Sets, timer. A UI pede elevação uma vez. Ao fechar, tudo volta. Nada fica preso no sistema: sem serviço, sem driver, sem entrada eterna.</p>
+          </div></div>
+        </div>
+        <div class="faq">
+          <button class="faq-q" type="button" aria-expanded="false">Tenho que pagar?<i class="fas fa-plus" aria-hidden="true"></i></button>
+          <div class="faq-a"><div class="faq-a-in">
+            <p>Nunca. Download direto das releases, código MIT, sem contas e sem rede além do próprio updater ocasional.</p>
+          </div></div>
+        </div>
+        <div class="faq">
+          <button class="faq-q" type="button" aria-expanded="false">Funciona em notebook híbrido?<i class="fas fa-plus" aria-hidden="true"></i></button>
+          <div class="faq-a"><div class="faq-a-in">
+            <p>Sim — o modo de CPU Sets só entra quando a topologia híbrida é reconhecida; em CPUs convencionais o lever fica inativo sem sofrer outros efeitos.</p>
+          </div></div>
+        </div>
+        <div class="faq">
+          <button class="faq-q" type="button" aria-expanded="false">Remove fácil?<i class="fas fa-plus" aria-hidden="true"></i></button>
+          <div class="faq-a"><div class="faq-a-in">
+            <p>Feche o app (restauração automática), remova pelo painel de controle ou apague a pasta. A única entrada do sistema é uma chave HKCU do auto-início, removida pelo próprio app.</p>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHANGELOG RESUMIDO ============ -->
+  <section class="sec sec-dark" id="changelog">
+    <div class="shell">
+      <div class="sec-head" data-re="up">
+        <p class="kicker">CHANGELOG RESUMIDO</p>
+        <h2>O que o 1.0 traz.</h2>
+      </div>
+      <div class="log-list">
+        <div class="log-item" data-re="up">
+          <span class="log-tag">1.0</span>
+          <div><b>Release pública final</b>
+          <p>Bench de latência v2 com score composto e timer real, 61 títulos com preset automático (101 regras de EXE), modo jogo econômico no painel, identidade flat violeta KT, EGS via manifest, modo seguro AC validado, updater com SHA-256 e site oficial próprio.</p></div>
+        </div>
+        <div class="log-item" data-re="up" data-de="1">
+          <span class="log-tag">motor</span>
+          <div><b>Latência e precisão</b>
+          <p>Timer 0.5 ms via NtSetSystemInformation, CPU Sets de P-cores, planos gaming, governor EcoQoS de fundo, memory/IO priority e serviços em otimização — todos com restauração por snapshot journal.</p></div>
+        </div>
+        <div class="log-item" data-re="up" data-de="2">
+          <span class="log-tag">interface</span>
+          <div><b>Flat KT com aurora sutil</b>
+          <p>Superfícies escuras com aurora e grid no fundo da página, bordas 1px, switches deslizantes, scrollbar fina, dropdown alinhado e hero tipográfico em Bebas Neue + Fira Code.</p></div>
+        </div>
+      </div>
+      <p class="releases-link" data-re="up">O changelog técnico completo fica no
+      <a class="lnk" href="https://github.com/KT-TWEAKS/kt-game-booster-public/blob/main/docs/CHANGELOG.md" target="_blank" rel="noopener">repositório público <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>.</p>
+    </div>
+  </section>
+
+  <!-- ============ CTA FINAL ============ -->
+  <section class="cta-final">
+    <div class="shell cta-in" data-re="up">
+      <p class="kicker"><span class="k-idx">KT</span> TUDO PRONTO</p>
+      <h2 class="cta-h">Baixe, execute.<br><em>O resto é medido.</em></h2>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-big btn-mag" href="https://github.com/KT-TWEAKS/kt-game-booster-public/releases/latest" target="_blank" rel="noopener"><i class="fas fa-download" aria-hidden="true"></i> Baixar a versão 1.0</a>
+        <a class="btn btn-ghost btn-big" href="https://github.com/KT-TWEAKS/kt-game-booster-public" target="_blank" rel="noopener">Ver o código <span class="arw">↗</span></a>
+      </div>
+      <p class="cta-note">código aberto MIT · ~500 KB · sem telemetria · rollback por journal</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-in">
+    <div class="footer-brand">
+      <div class="brand"><span class="brand-mark">KT</span><span class="brand-copy"><strong>KT GAME BOOSTER</strong><small>KT TWEAKS · BRASIL</small></span></div>
+      <p>Otimização em modo usuário, código aberto (MIT), sem driver e sem telemetria.<br>Windows é marca da Microsoft; anticheats são de seus titulares.</p>
+    </div>
+    <div class="footer-col">
+      <span class="footer-label">NESTA PÁGINA</span>
+      <a href="#recursos">Recursos</a>
+      <a href="#painel">O painel</a>
+      <a href="#perfis">Perfis</a>
+      <a href="#bench">Bench v2</a>
+      <a href="#presets">Presets</a>
+      <a href="#cli">CLI</a>
+      <a href="#download">Download</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-label">ECOSSISTEMA KT</span>
+      <a href="https://kt-wirzade-site.vercel.app" target="_blank" rel="noopener">KT WIRZADE <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+      <a href="https://kt-tweaks-apbx.vercel.app" target="_blank" rel="noopener">KT APBX <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+      <a href="https://github.com/KT-TWEAKS/kt-game-booster-public" target="_blank" rel="noopener">GitHub <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+    </div>
+  </div>
+  <div class="shell footer-legal">
+    © <span id="yr"></span> KT TWEAKS · KT Game Booster não é afiliado à Microsoft ou a fabricantes de anticheat.
+  </div>
+</footer>
+
+<button class="to-top" id="to-top" type="button" aria-label="Voltar ao topo"><i class="fas fa-arrow-up" aria-hidden="true"></i></button>
+
+<script src="./app.js"></script>
+</body>
+</html>
