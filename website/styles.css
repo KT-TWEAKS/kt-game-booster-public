@@ -41,6 +41,7 @@ section[id],footer[id]{scroll-margin-top:84px}
 
 /* ============ FUNDO GLOBAL (aurora + grid + noise) ============ */
 .bg-fx{position:fixed;inset:0;z-index:-1;overflow:hidden;background:var(--bg)}
+.kt-atmosphere{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.9;mix-blend-mode:screen}
 .blob{position:absolute;border-radius:50%;filter:blur(130px);opacity:.3;will-change:transform}
 .b1{width:720px;height:720px;left:-220px;top:-260px;background:radial-gradient(circle,rgba(155,124,255,.20),transparent 65%);animation:drift 26s ease-in-out infinite alternate}
 .b2{width:640px;height:640px;right:-260px;top:32%;background:radial-gradient(circle,rgba(86,217,232,.10),transparent 65%);animation:drift 32s ease-in-out infinite alternate-reverse}
