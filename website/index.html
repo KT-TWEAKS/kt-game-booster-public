@@ -45,6 +45,7 @@
       <a href="#faq">FAQ</a>
     </nav>
     <a class="btn btn-primary btn-mag nav-cta" href="https://github.com/KT-TWEAKS/kt-game-booster-public/releases/latest" target="_blank" rel="noopener"><i class="fas fa-download" aria-hidden="true"></i> Baixar 1.0</a>
+    <button class="focus-toggle" data-focus-mode type="button" aria-pressed="false"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> Reduzir efeitos</button>
     <button class="nav-burger" id="burger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navlinks-mobile"><i class="fas fa-bars" aria-hidden="true"></i></button>
     <span class="topbar-progress" id="topbar-progress" aria-hidden="true"></span>
   </div>
@@ -69,6 +70,7 @@
     <div class="shell hero-in">
       <div class="hero-copy" data-re="up">
         <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> KT TWEAKS · MOTOR EM MODO USUÁRIO · SEM DRIVER</p>
+        <p class="brand-signal"><span aria-hidden="true">✦</span> UMA FERRAMENTA KT TWEAKS · TRANSPARENTE POR PADRÃO</p>
         <h1>O Windows<br>focado no <em>seu jogo.</em></h1>
         <p class="hero-lead">
           Detecta o jogo, aplica o perfil certo e devolve tudo quando você sai.
@@ -656,6 +658,7 @@ KTGameBooster.exe <span class="c-flag">--no-eco-qos --no-io-priority</span>  <sp
 <footer class="footer">
   <div class="shell footer-in">
     <div class="footer-brand">
+      <img class="footer-banner" src="./assets/kt-tweaks-banner.png" alt="KT TWEAKS" loading="lazy">
       <div class="brand"><span class="brand-mark">KT</span><span class="brand-copy"><strong>KT GAME BOOSTER</strong><small>KT TWEAKS · BRASIL</small></span></div>
       <p>Otimização em modo usuário, código aberto (MIT), sem driver e sem telemetria.<br>Windows é marca da Microsoft; anticheats são de seus titulares.</p>
     </div>
@@ -684,5 +687,6 @@ KTGameBooster.exe <span class="c-flag">--no-eco-qos --no-io-priority</span>  <sp
 <button class="to-top" id="to-top" type="button" aria-label="Voltar ao topo"><i class="fas fa-arrow-up" aria-hidden="true"></i></button>
 
 <script src="./app.js"></script>
+<script type="module" src="./focus-mode.js"></script>
 </body>
 </html>

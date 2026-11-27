@@ -65,6 +65,10 @@ section[id],footer[id]{scroll-margin-top:84px}
 .brand-copy{display:flex;flex-direction:column;line-height:1.2}
 .brand-copy strong{font-size:13px;letter-spacing:2px}
 .brand-copy small{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px}
+.footer-banner{display:block;width:min(100%,330px);height:auto;margin:0 0 18px;border:1px solid rgba(155,124,255,.22);opacity:.92;filter:saturate(1.05);transition:opacity .25s,transform .25s}.footer-banner:hover{opacity:1;transform:translateY(-2px)}
+.focus-toggle{margin-left:auto;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--muted);padding:8px 11px;font:600 10px var(--mono);letter-spacing:.5px;transition:border-color .2s,color .2s,background .2s;white-space:nowrap}
+.focus-toggle:hover,.focus-toggle[aria-pressed="true"]{border-color:var(--violet);color:var(--violet-2);background:var(--violet-dim)}
+.brand-signal{display:flex;align-items:center;gap:9px;font:500 10px var(--mono);letter-spacing:1.4px;color:var(--violet-2);margin:-9px 0 20px}.brand-signal span{font-size:15px;color:var(--violet);text-shadow:0 0 16px var(--violet)}
 .nav{margin-left:auto;display:flex;gap:26px}
 .nav a{position:relative;font-size:13.5px;font-weight:600;color:var(--muted);letter-spacing:.3px;padding:6px 0;transition:color .25s}
 .nav a::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1.5px;background:var(--violet);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
@@ -516,3 +520,10 @@ body::after{content:'';position:fixed;left:var(--cgx,-9999px);top:var(--cgy,-999
 .signal-in b,.app-metric .num{display:block}
 .bento{perspective:1100px}
 .bc{rotate:var(--brx,0deg) var(--bry,0deg);transition:rotate .14s ease-out,border-color .3s,background .3s,box-shadow .3s}
+
+/* Leitura ou jogo: mantém a informação e desliga somente o movimento decorativo. */
+body.focus-mode .bg-fx,body.focus-mode::after{display:none}
+body.focus-mode .hero-scan,body.focus-mode .pulse,body.focus-mode .orbit,body.focus-mode .live-card,body.focus-mode .marquee-track{animation:none!important}
+body.focus-mode .hero-copy>*,body.focus-mode .app-window{animation:none!important}
+body.focus-mode .app-window{transform:none!important}
+@media (max-width:1040px){.focus-toggle{display:none}}
