@@ -58,7 +58,7 @@ jobs:
         run: ./scripts/package-installer.ps1 -Version 1.0 -SkipPackage
 
       - name: Guardar pacotes da execução
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: KTGameBooster-v1.0-relaunch-win-x64
           path: |
